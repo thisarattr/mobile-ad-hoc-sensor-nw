@@ -116,8 +116,8 @@ public class DisplayRecordActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ServiceInvoker.getJobs(48.8583f, 2.2945f, "2,3", dao);
-		//viewAllRecords.setText("All Records from DB");
+		//ServiceInvoker.getJobs(48.8583f, 2.2945f, "2,3", dao);
+		viewAllRecords.setText("All Records from DB");
 	}
 
 	/* (non-Javadoc)
