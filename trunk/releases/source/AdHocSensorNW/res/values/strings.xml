@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Ad-hoc Sensor NW on Magnetometer</string>
+    <string name="app_name">Ad-Hoc Sensor NW</string>
+    <string name="titleUsername">Username</string>
+    <string name="titlePassword">Password</string>
+    <string name="titleUrl">URL</string>
+    <string name="titleManuPrefs">Preferences</string>
+    <string name="titleServiceStart">Start Service</string>
+    <string name="titleServiceStop">Stop Service</string>
+</resources>
