@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sign up" android:id="@+id/txtViewSignUp" android:textSize="18px" android:layout_marginTop="10dip" android:layout_marginLeft="10dip"></TextView>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout2" android:layout_width="wrap_content" android:layout_height="35dip" android:layout_marginTop="15dip">
+        <TextView android:layout_width="110dip" android:textSize="16px" android:layout_height="wrap_content" android:id="@+id/txtViewUsername" android:text="Username"></TextView>
+        <EditText android:id="@+id/editTxtUsername" android:layout_width="140dip" android:layout_height="wrap_content" android:inputType="text" android:textSize="12dip"></EditText>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout3" android:layout_width="wrap_content" android:layout_height="35dip">
+        <TextView android:layout_width="110dip" android:textSize="16px" android:layout_height="wrap_content" android:text="Password" android:id="@+id/txtViewPassword"></TextView>
+        <EditText android:id="@+id/editTxtPassword" android:layout_width="140dip" android:layout_height="wrap_content" android:inputType="textPassword" android:password="true"></EditText>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout4" android:layout_width="wrap_content" android:layout_height="35dip">
+    	<TextView android:layout_width="110dip" android:textSize="16px" android:layout_height="wrap_content" android:text="Confirm PW" android:id="@+id/txtViewConfirmPassword"></TextView>
+        <EditText android:id="@+id/editTxtConfirmPassword" android:layout_width="140dip" android:layout_height="wrap_content" android:inputType="textPassword" android:password="true"></EditText>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout5" android:layout_width="wrap_content" android:layout_height="35dip">
+        <TextView android:layout_width="110dip" android:textSize="16px" android:layout_height="wrap_content" android:id="@+id/txtViewFullname" android:text="Full Name"></TextView>
+        <EditText android:id="@+id/editTxtFullname" android:layout_width="140dip" android:layout_height="wrap_content" android:inputType="text" android:textSize="12dip"></EditText>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout6" android:layout_width="wrap_content" android:layout_height="35dip">
+        <TextView android:layout_width="110dip" android:textSize="16px" android:layout_height="wrap_content" android:text="E-mail" android:id="@+id/txtViewEmail"></TextView>
+        <EditText android:id="@+id/editTxtEmail" android:layout_width="140dip" android:layout_height="wrap_content" android:inputType="textEmailAddress" android:textSize="12dip"></EditText>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout7" android:layout_width="wrap_content" android:layout_height="40dip" android:layout_marginTop="20dip">
+        <Button android:layout_height="wrap_content" android:text="Cancel" android:id="@+id/btnCancelSignup" android:layout_width="100dip" android:layout_marginLeft="60dip"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/btnSignup" android:text="Sign Up" android:layout_width="100dip" android:layout_marginLeft="20dip"></Button>
+    </LinearLayout>
+</TableLayout>
