@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+	<Resource name="jdbc/sensornw" auth="Container" type="javax.sql.DataSource"
+		username="root" password="thilanka" driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/sensor_nw" maxActive="15" maxIdle="3" />
+
+</Context>
