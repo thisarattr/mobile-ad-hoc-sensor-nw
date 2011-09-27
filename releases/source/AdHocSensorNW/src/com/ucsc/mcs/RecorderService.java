@@ -205,7 +205,7 @@ public class RecorderService extends Service {
 							reading = mSensorListener.getMean();
 						}
 						// dist = arccos(sin(lat1) · sin(lat2) + cos(lat1) · cos(lat2) · cos(lon1 - lon2)) · R (6371)
-						double dist = Math.cos(Math.sin(jobLatitude * CommonConstants.RADIAN) * Math.sin(latitude * CommonConstants.RADIAN)
+						double dist = Math.acos(Math.sin(jobLatitude * CommonConstants.RADIAN) * Math.sin(latitude * CommonConstants.RADIAN)
 								+ Math.cos(jobLatitude * CommonConstants.RADIAN) * Math.cos(latitude * CommonConstants.RADIAN)
 								* Math.cos(jobLongitude * CommonConstants.RADIAN - longitude * CommonConstants.RADIAN))
 								* CommonConstants.R;
@@ -229,7 +229,7 @@ public class RecorderService extends Service {
 								values.put(SensorDBHelper.DATA_READING, reading);
 
 								sensorDao.insertOrIgnore(SensorDBHelper.DATA_TABLE, values);
-								Thread.sleep(MIN_DELAY * jobFrequency);
+								Thread.sleep((MIN_DELAY * jobFrequency));
 
 							} catch (InterruptedException e) {
 								Log.e(TAG, "Error occured while updating Data table!!! Original stacktrace: " + e.toString());
