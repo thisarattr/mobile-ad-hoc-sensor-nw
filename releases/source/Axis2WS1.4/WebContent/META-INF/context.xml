@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
 
-	<Resource name="jdbc/sensornw" auth="Container" type="javax.sql.DataSource"
-		username="root" password="thilanka" driverClassName="com.mysql.jdbc.Driver"
-		url="jdbc:mysql://localhost:3306/sensor_nw" maxActive="15" maxIdle="3" />
+	<Resource name="jdbc/sensornw" auth="Container" type="javax.sql.DataSource" username="root" password="thilanka" driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/sensor_nw"
+		maxActive="15" maxIdle="3" />
+
+	<Resource name="mail/JavaMail" auth="Container" type="javax.mail.Session" username="rad.nihal@gmail.com" password="thilanka" mail.debug="true" mail.user="rad.nihal@gmail.com" mail.from="rad.nihal@gmail.com"
+		mail.transport.protocol="smtp" mail.smtp.host="smtp.gmail.com" mail.smtp.auth="true" mail.smtp.port="587" mail.smtp.starttls.enable="true" />
 
 </Context>
