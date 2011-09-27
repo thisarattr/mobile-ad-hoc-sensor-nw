@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ucsc.mcs" android:versionCode="1" android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="3" />
+
+	<application android:icon="@drawable/tele" android:label="@string/app_name" android:debuggable="true" android:name=".SensorApplication">
+
+		<activity android:name=".LoginActivity" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".HomeActivity" android:screenOrientation="sensor" android:label="@string/titleManuPrefs"></activity>
+		<activity android:name=".PrefsActivity" android:screenOrientation="sensor" android:label="@string/titleManuPrefs"></activity>
+		<activity android:name=".DisplayRecordActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
+		<activity android:name=".AddJobActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
+		<activity android:name=".SignUpActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
+
+		<service android:name=".RecorderService" />
+	</application>
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+</manifest>
