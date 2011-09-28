@@ -151,7 +151,7 @@ public class SensorServiceSkeleton {
 			message.setRecipients(Message.RecipientType.TO, to);
 			message.setSubject("Test mail from my sensor web servivce!!!");
 			message.setContent("This is the message content", "text/html;charset=UTF-8");
-			Transport.send(message);
+			//Transport.send(message);
 		} catch (AddressException ex) {
 			System.out.println(ex.getMessage());
 		} catch (MessagingException e) {
