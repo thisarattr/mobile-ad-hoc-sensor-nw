@@ -171,6 +171,8 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 			startActivityForResult(addJob, CommonConstants.ADD_JOB_REQ_ID);
 			
 		}else if(v.getId() == R.id.btnViewJob){
+			Intent viewJob = new Intent(v.getContext(), ViewJobsActivity.class);
+			startActivityForResult(viewJob, CommonConstants.VIEW_JOB_REQ_ID);
 			
 		}else if(v.getId() == R.id.btnSync){
 			///ServiceInvoker.sy

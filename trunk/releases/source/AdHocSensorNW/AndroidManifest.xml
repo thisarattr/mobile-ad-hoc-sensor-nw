@@ -15,6 +15,7 @@
 		<activity android:name=".DisplayRecordActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
 		<activity android:name=".AddJobActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
 		<activity android:name=".SignUpActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
+		<activity android:name=".ViewJobsActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
 
 		<service android:name=".RecorderService" />
 	</application>
