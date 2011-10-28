@@ -268,7 +268,8 @@ public class SensorServiceSkeleton {
 			 * 6. First order by starttime ascending order to find the closest jobs to the current time. 
 			 *    Then inner join job table with user table and order by user.rank DESC to get the highest rank users job with priority within the closest jobs.
 			 * 7. DateTime on sql can not assign as null it will always be "0000-00-00 00:00:00" there for we need to check for "UNIX_TIMESTAMP(field)=0". 
-			 *    This will say if the field is 0 or not.
+			 *    This will say if the field is 0 or not. And UNIX_TIMESTAMP is from seconds but java side it except time in millisecond when converting into
+			 *    data formats. Therefore multiply by 1000.
 			 * 
 			 */
 			
@@ -528,11 +529,13 @@ public class SensorServiceSkeleton {
 		Connection conn;
 		PreparedStatement prepStmt;
 		ResultSet resultSet;
+		String errorMsg = null;
 		//boolean isSuccess=false;
 		
 		ViewJobResponseType viewJobResponse = new ViewJobResponseType();
 		// id, sensor_name, start_time, expire_time, frequency, time_period, latitude, longitude, loc_range, nodes, description, datetime
-		String sql = "SELECT j.id,s.name,UNIX_TIMESTAMP(j.start_time) start_time,UNIX_TIMESTAMP(j.expire_time) expire_time,j.frequency,j.time_period,j.latitude,j.longitude,j.loc_range,j.nodes,j.description,j.datetime " +
+		String sql = "SELECT j.id, s.name, UNIX_TIMESTAMP(j.start_time)*1000 start_time, UNIX_TIMESTAMP(j.expire_time)*1000 expire_time, j.frequency, j.time_period, j.latitude, " +
+				"j.longitude, j.loc_range, j.nodes, j.description, UNIX_TIMESTAMP(j.datetime)*1000 datetime " +
 				"FROM job j INNER JOIN user u ON j.user_id=u.id INNER JOIN sensor s ON j.sensor_id=s.id WHERE u.username=?";
 		StringBuffer output = new StringBuffer();
 		
@@ -546,7 +549,8 @@ public class SensorServiceSkeleton {
 			while (resultSet.next()) {
 				output.append(resultSet.getLong("id") + DATA_DELEMETER);
 				output.append(resultSet.getString("name") + DATA_DELEMETER);
-				// start_time and expire_time is taken as unix_timestamp from DB, cos otherwise if this becomes 0 then there is a issue when converting into timestamp.
+				/*start_time and expire_time is taken as unix_timestamp from DB, cos otherwise if this becomes 0. And UNIX_TIMESTAMP is from seconds 
+				but ordinary timestamp except time in millisecond when converting into date formats. Therefore multiply by 1000.*/
 				output.append(resultSet.getLong("start_time") + DATA_DELEMETER);
 				output.append(resultSet.getLong("expire_time") + DATA_DELEMETER);
 				output.append(resultSet.getInt("frequency") + DATA_DELEMETER);
@@ -556,7 +560,7 @@ public class SensorServiceSkeleton {
 				output.append(resultSet.getDouble("loc_range") + DATA_DELEMETER);
 				output.append(resultSet.getInt("nodes") + DATA_DELEMETER);
 				output.append(resultSet.getString("description") + DATA_DELEMETER);
-				output.append(resultSet.getTimestamp("datetime").getTime());
+				output.append(resultSet.getLong("datetime"));
 				if (!resultSet.isLast()) {
 					output.append(ROW_DELEMETER);
 				}
@@ -567,12 +571,14 @@ public class SensorServiceSkeleton {
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while retrieving Job data for user:" + viewJobRequestType.getUsername() + ". Original stacktrace: "
 					+ e.toString());
+			errorMsg = e.getMessage();
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Error occurred while retrieving Job data for user:" + viewJobRequestType.getUsername() + ". Original stacktrace: "
 					+ e.toString());
+			errorMsg = "SQL error occurred";
 		}
-		if (output.toString().isEmpty()) {
-			output.append("Error occurred while retrieving Job data for user:" + viewJobRequestType.getUsername() + ".");
+		if (errorMsg != null) {
+			output = new StringBuffer("Error occurred while retrieving Job data for user:" + viewJobRequestType.getUsername() + ". " + errorMsg);
 		}
 		viewJobResponse.setViewJobResponseType(output.toString());
 		return viewJobResponse;
