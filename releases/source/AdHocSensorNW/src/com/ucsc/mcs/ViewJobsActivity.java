@@ -3,19 +3,31 @@
  */
 package com.ucsc.mcs;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 /**
  * @author thisara
  *
  */
-public class ViewJobsActivity extends Activity {
+public class ViewJobsActivity extends ListActivity {
 
-	private ListView listVwJobs;
-	private String lv_arr[]={"Android","iPhone","BlackBerry","AndroidPeople","Thisara","Thilanka","Rupasinghe","Terra Nova","BSG","Lost"};
+	//private ListView listVwJobs;
+	
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -23,11 +35,45 @@ public class ViewJobsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.viewjobs);
 		
-		listVwJobs=(ListView)findViewById(R.id.listVwJobs);
-		// By using setAdpater method in listview we an add string array in list.
-		listVwJobs.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1 , lv_arr));
+		ServiceInvoker serviceInvoker = new ServiceInvoker();
+		List<Map<String, String>> dataList = null;
+		
+		try {
+			dataList = serviceInvoker.viewJobs("0000-0000-0000", "thisara");
+
+			SimpleAdapter adpter = new SimpleAdapter(this, dataList, R.layout.viewjob_row, new String[] { ServiceInvoker.VIEWJOB_ID,
+					ServiceInvoker.VIEWJOB_DATATIME, ServiceInvoker.VIEWJOB_LAT, ServiceInvoker.VIEWJOB_LONG }, new int[] { R.id.JOBVIEW_ID,
+					R.id.JOBVIEW_DATE, R.id.JOBVIEW_LAT, R.id.JOBVIEW_LONG });
+			this.setListAdapter(adpter);
+			
+		} catch (RuntimeException e) {
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
+		
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		
+		// Get the item that was clicked
+		Map<String, String> selectedRec = (Map<String, String>) this.getListAdapter().getItem(position);
+		
+		Bundle bundle = new Bundle();
+		for (Entry<String, String> element : selectedRec.entrySet()) {
+			bundle.putString(element.getKey(), element.getValue());
+		}
+		Intent editJob = new Intent(this, EditJobActivity.class);
+		editJob.putExtras(bundle);
+		startActivity(editJob);
+
+		Toast.makeText(this, "You selected: " + selectedRec.get(ServiceInvoker.VIEWJOB_DATATIME)+"  "+selectedRec.get(ServiceInvoker.VIEWJOB_SENSORNAME), Toast.LENGTH_LONG).show();
+
+	}
+
+	
 }

@@ -4,6 +4,11 @@
 package com.ucsc.mcs;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.Marshal;
@@ -28,6 +33,20 @@ import com.ucsc.mcs.constants.WebServiceConstants;
 public class ServiceInvoker {
 
 	private static final String TAG = ServiceInvoker.class.getSimpleName();
+	
+	public static final String VIEWJOB_ID = "id";
+	public static final String VIEWJOB_SENSORNAME = "sensor_name";
+	public static final String VIEWJOB_STARTTIME = "start_time";
+	public static final String VIEWJOB_EXPIRETIME = "expire_time";
+	public static final String VIEWJOB_FREQ = "frequency";
+	public static final String VIEWJOB_TIMEPERIOD = "time_period";
+	public static final String VIEWJOB_LAT = "latitude";
+	public static final String VIEWJOB_LONG = "longitude";
+	public static final String VIEWJOB_LOCRANGE = "loc_range";
+	public static final String VIEWJOB_NODES = "nodes";
+	public static final String VIEWJOB_DESC = "description";
+	public static final String VIEWJOB_DATATIME = "datetime";
+	
 
 	/**
 	 * @param username
@@ -44,6 +63,15 @@ public class ServiceInvoker {
 		request.addProperty("username", username);
 		request.addProperty("password", password);
 		request.addProperty("imei", imei);
+		
+		System.setProperty("javax.net.ssl.trustStore", "sensor_nw.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "thilanka");
+		System.setProperty("javax.net.ssl.keyStore", "sensor_nw.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword", "thilanka");
+		
+		String trustStore = System.getProperty("javax.net.ssl.trustStore");
+		System.out.println("This is Trust::"+trustStore+"::");
+		
 
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.dotNet = false;
@@ -57,10 +85,10 @@ public class ServiceInvoker {
 			output = sp.toString();
 		} catch (IOException e) {
 			Log.d(TAG, "Error occur when invoking Login service. Original Error:" + e.toString());
-			output="Error occur when invoking Login service.";
+			output="Error occur when invoking Login service." + e.getMessage();
 		} catch (XmlPullParserException e) {
 			Log.d(TAG, "Error occur when invoking Login service. Original Error:" + e.toString());
-			output="Server not responding. Please check network connection.";
+			output="Server not responding. Please check network connection." + e.getMessage();
 		}
 		
 
@@ -315,6 +343,69 @@ public class ServiceInvoker {
 		isSuccess=Boolean.parseBoolean(sp.toString());
 		
 		return isSuccess;
+	}
+	
+	/**
+	 * @param imei
+	 * @param username
+	 * @return
+	 */
+	public List<Map<String, String>> viewJobs(final String imei, final String username){
+		
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_VIEW_JOB);
+		request.addProperty("imei", imei);
+		request.addProperty("username", username);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		// For float marshaling. This is needed if u r using types that are not
+		// defined on PropertyInfo class.
+		Marshal floatMarshal = new MarshalFloat();
+		floatMarshal.register(envelope);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_VIEW_JOB, envelope);
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when invoking GetJobs service. Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when invoking GetJobs service. Original Error:" + e.toString());
+		}
+		
+		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+		String jobs=sp.toString();
+		
+		List<Map<String, String>> dataList = null;
+		
+		if (jobs != null && jobs.length()>0 && !jobs.contains("Error")) {
+			String[] rowArray = jobs.split(CommonConstants.ROW_DELEMETER);
+			dataList = new ArrayList<Map<String,String>>(); 
+			
+			for (int i = 0; i < rowArray.length; i++) {
+				Map<String, String> dataMap = new HashMap<String, String>();
+				String[] dataArray = rowArray[i].split(CommonConstants.DATA_DELEMETER);
+				dataMap.put(VIEWJOB_ID, dataArray[0]);
+				dataMap.put(VIEWJOB_SENSORNAME, dataArray[1]);
+				dataMap.put(VIEWJOB_STARTTIME, dataArray[2]);
+				dataMap.put(VIEWJOB_EXPIRETIME, dataArray[3]);
+				dataMap.put(VIEWJOB_FREQ, dataArray[4]);
+				dataMap.put(VIEWJOB_TIMEPERIOD, dataArray[5]);
+				dataMap.put(VIEWJOB_LAT, dataArray[6]);
+				dataMap.put(VIEWJOB_LONG, dataArray[7]);
+				dataMap.put(VIEWJOB_LOCRANGE, dataArray[8]);
+				dataMap.put(VIEWJOB_NODES, dataArray[9]);
+				dataMap.put(VIEWJOB_DESC, dataArray[10]);
+				dataMap.put(VIEWJOB_DATATIME, new Timestamp(Long.parseLong(dataArray[11])).toString());
+				dataList.add(dataMap);
+			}
+		}else{
+			throw new RuntimeException(jobs);
+		}
+		
+		return dataList;
 	}
 
 }
