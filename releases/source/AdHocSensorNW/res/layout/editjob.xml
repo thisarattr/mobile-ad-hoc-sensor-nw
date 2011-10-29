@@ -50,7 +50,7 @@
 			<LinearLayout android:id="@+id/linearLayout12" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginTop="30dip">
 				<Button android:text="Discard" android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnJobDiscard" android:layout_marginLeft="30dip"></Button>
 				<Button android:text="Reset" android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnJobReset" android:layout_marginLeft="10dip"></Button>
-				<Button android:text="Save" android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnJobSave" android:layout_marginLeft="10dip"></Button>
+				<Button android:text="Update" android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnJobUpdate" android:layout_marginLeft="10dip"></Button>
 			</LinearLayout>
 		</TableLayout>
 	</ScrollView>
