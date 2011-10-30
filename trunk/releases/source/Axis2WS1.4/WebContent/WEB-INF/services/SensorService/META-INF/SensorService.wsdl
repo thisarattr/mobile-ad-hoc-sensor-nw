@@ -121,17 +121,18 @@
             	<xsd:complexType>
             		<xsd:sequence>
             			<xsd:element name="sensorType" type="xsd:int"/>
-						<xsd:element name="latitude" type="xsd:float"/>
-						<xsd:element name="longitude" type="xsd:float"/>
-						<xsd:element name="locRange" type="xsd:float"/>
-						<xsd:element name="starttime" type="xsd:long"/>
-						<xsd:element name="endtime" type="xsd:long"/>
-						<xsd:element name="frequency" type="xsd:int"/>
-						<xsd:element name="timePeriod" type="xsd:int"/>
-						<xsd:element name="Nodes" type="xsd:int"/>
-						<xsd:element name="username" type="xsd:string"/>
-						<xsd:element name="imei" type="xsd:string"/>
-						<xsd:element name="description" type="xsd:string"/>
+            			<xsd:element name="latitude" type="xsd:float"/>
+            			<xsd:element name="longitude" type="xsd:float"/>
+            			<xsd:element name="locRange" type="xsd:float"/>
+            			<xsd:element name="starttime" type="xsd:long"/>
+            			<xsd:element name="endtime" type="xsd:long"/>
+            			<xsd:element name="frequency" type="xsd:int"/>
+            			<xsd:element name="timePeriod" type="xsd:int"/>
+            			<xsd:element name="Nodes" type="xsd:int"/>
+            			<xsd:element name="username" type="xsd:string"/>
+            			<xsd:element name="imei" type="xsd:string"/>
+            			<xsd:element name="description" type="xsd:string"/>
+            			<xsd:element name="jobId" type="xsd:long"/>
             		</xsd:sequence>
             	</xsd:complexType>
             </xsd:element>
