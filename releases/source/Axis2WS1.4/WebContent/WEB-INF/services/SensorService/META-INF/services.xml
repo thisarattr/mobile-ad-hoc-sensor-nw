@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: 1.4.1  Built on : Aug 13, 2008 (05:03:35 LKT) -->
+<serviceGroup>
+    <service name="SensorService">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="com.ucsc.mcs.sensorservice.SensorServiceMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">com.ucsc.mcs.sensorservice.SensorServiceSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="GetMessage" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/GetMessage</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/GetMessageResponse</outputActionMapping>
+        </operation>
+        <operation name="EmailData" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/EmailData</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/EmailDataResponse</outputActionMapping>
+        </operation>
+        <operation name="UploadData" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/UploadData</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/UploadDataResponse</outputActionMapping>
+        </operation>
+        <operation name="AddJob" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/AddJob</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/AddJobResponse</outputActionMapping>
+        </operation>
+        <operation name="Subscribe" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/Subscribe</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/SubscribeResponse</outputActionMapping>
+        </operation>
+        <operation name="Login" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/Login</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/LoginResponse</outputActionMapping>
+        </operation>
+        <operation name="EditUser" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/EditUser</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/EditUserResponse</outputActionMapping>
+        </operation>
+        <operation name="EditJob" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/EditJob</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/EditJobResponse</outputActionMapping>
+        </operation>
+        <operation name="GetReferenceData" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/GetReferenceData</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/GetReferenceDataResponse</outputActionMapping>
+        </operation>
+        <operation name="CalculateRectArea" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/NewOperation</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/CalculateRectAreaResponse</outputActionMapping>
+        </operation>
+        <operation name="ViewData" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/ViewData</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/ViewDataResponse</outputActionMapping>
+        </operation>
+        <operation name="GetJobs" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/GetJobs</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/GetJobsResponse</outputActionMapping>
+        </operation>
+        <operation name="ViewJob" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/ViewJob</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/ViewJobResponse</outputActionMapping>
+        </operation>
+        <operation name="PasswordRecover" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/PasswordRecover</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/PasswordRecoverResponse</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>
