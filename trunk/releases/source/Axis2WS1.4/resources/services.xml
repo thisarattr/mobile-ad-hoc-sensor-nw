@@ -33,6 +33,14 @@
             <actionMapping>http://mcs.ucsc.com/SensorService/Login</actionMapping>
             <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/LoginResponse</outputActionMapping>
         </operation>
+        <operation name="EditUser" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/EditUser</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/EditUserResponse</outputActionMapping>
+        </operation>
+        <operation name="EditJob" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/EditJob</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/EditJobResponse</outputActionMapping>
+        </operation>
         <operation name="GetReferenceData" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
             <actionMapping>http://mcs.ucsc.com/SensorService/GetReferenceData</actionMapping>
             <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/GetReferenceDataResponse</outputActionMapping>
