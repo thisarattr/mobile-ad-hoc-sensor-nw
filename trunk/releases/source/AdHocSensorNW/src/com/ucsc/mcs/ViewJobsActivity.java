@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.ucsc.mcs.constants.CommonConstants;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,8 +38,8 @@ public class ViewJobsActivity extends ListActivity {
 		ServiceInvoker serviceInvoker = new ServiceInvoker();
 		List<Map<String, String>> dataList = null;
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		username = prefs.getString("username", "");
+		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		username = settings.getString(CommonConstants.USERNAME, "");
 		
 		try {
 			dataList = serviceInvoker.viewJobs("0000-0000-0000", username);
