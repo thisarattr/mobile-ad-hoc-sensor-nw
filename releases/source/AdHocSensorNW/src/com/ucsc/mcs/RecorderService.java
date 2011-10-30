@@ -10,6 +10,7 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -29,7 +30,8 @@ public class RecorderService extends Service {
 	private static final String TAG = RecorderService.class.getSimpleName();
 
 	static final long MIN_DELAY = 60000; // a minute
-	static final long UPLOAD_TIMEOUT = 60000*60*2;
+	//static final long UPLOAD_TIMEOUT = 60000*60*2;
+	static final long UPLOAD_TIMEOUT = 60000*15;
 	static final long JOB_CHECK_TIMEOUT = 60000*15;
 	private boolean runFlag = false;
 
@@ -48,7 +50,8 @@ public class RecorderService extends Service {
 	
 	//Phone imei
 	private String imei = null;
-
+	private String username;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -103,10 +106,13 @@ public class RecorderService extends Service {
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		imei = telephonyManager.getDeviceId();
 		
+		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		username = settings.getString(CommonConstants.USERNAME, "");
+		
 		//Sync with the server database.
 		//get the all unfinished and valid jobs from the database.
 		//Upload Data for this sequence job_id, imei, datetime, latitude, longitude, reading
-		ServiceInvoker.sync(mlocListener.getLatitude(), mlocListener.getLongitute(), imei, sensorDao);
+		ServiceInvoker.sync(mlocListener.getLatitude(), mlocListener.getLongitute(), imei, username, sensorDao);
 		
 		Log.d(TAG, "onCreated");
 
@@ -190,7 +196,7 @@ public class RecorderService extends Service {
 						uploadConter = +1;
 						// Upload data
 						if (UPLOAD_TIMEOUT <= uploadConter * jobFrequency * MIN_DELAY) {
-							boolean isUploadSuccess = ServiceInvoker.uploadData(imei, sensorDao);
+							boolean isUploadSuccess = ServiceInvoker.uploadData(imei, username, sensorDao);
 							if (isUploadSuccess) {
 								uploadConter = 0;
 							}
@@ -244,7 +250,7 @@ public class RecorderService extends Service {
 									jobStatus = SensorDBHelper.JOB_STATUS_HOLD; // job hold, out of range
 								}
 								updateJobStatus(jobStatus, jobId);
-								ServiceInvoker.sync(latitude, longitude, imei, sensorDao);
+								ServiceInvoker.sync(latitude, longitude, imei, username, sensorDao);
 								Cursor jobCur = sensorDao.getLiveJobs();
 								if (jobCur.moveToFirst()) {
 									// job found and continue to record.
@@ -277,7 +283,7 @@ public class RecorderService extends Service {
 					try {
 						Log.i(TAG, "There are no jobs found and thread will go to sleep for "+JOB_CHECK_TIMEOUT+"ms!!!");
 						Thread.sleep(JOB_CHECK_TIMEOUT);
-						ServiceInvoker.sync(mlocListener.getLatitude(), mlocListener.getLongitute(), imei, sensorDao);
+						ServiceInvoker.sync(mlocListener.getLatitude(), mlocListener.getLongitute(), imei, username, sensorDao);
 					} catch (InterruptedException e) {
 						Log.e(TAG, "Error occured while make thread sleep cos no jobs found!!! Original stacktrace: " + e.toString());
 					}

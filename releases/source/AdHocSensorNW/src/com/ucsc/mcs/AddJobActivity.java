@@ -23,17 +23,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 /**
  * @author thisara
  * 
  */
-public class AddJobActivity extends Activity implements OnClickListener {
+public class AddJobActivity extends Activity implements OnClickListener, OnCheckedChangeListener {
 
 	static final int ID_START_DATEPICKER = 0;
 	static final int ID_START_TIMEPICKER = 1;
@@ -43,6 +46,7 @@ public class AddJobActivity extends Activity implements OnClickListener {
 	private Spinner spinSensorType;
 	private EditText editTxtLatitude, editTxtLongitude, editTxtLocRange, editTxtFreq, editTxtTimePeriod, editTxtNodes, editTxtDesc;
 	private Button btnStartDate, btnStartTime, btnEndDate, btnEndTime, btnJobDiscard, btnJobSave, btnJobReset;
+	private CheckBox chkBxStarttime, chkBxEndtime;
 	private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
 	private String imei;
 	private ServiceInvoker serviceInvoker;
@@ -85,6 +89,10 @@ public class AddJobActivity extends Activity implements OnClickListener {
 		btnJobDiscard.setOnClickListener(this);
 		btnJobReset.setOnClickListener(this);
 		btnJobSave.setOnClickListener(this);
+		chkBxStarttime = (CheckBox) findViewById(R.id.chkBxStarttimeAdd);
+		chkBxEndtime = (CheckBox) findViewById(R.id.chkBxEndtimeAdd);
+		chkBxStarttime.setOnCheckedChangeListener(this);
+		chkBxEndtime.setOnCheckedChangeListener(this);
 
 		String[] sensorItems = new String[] { "Magnetic", "Temperature", "Motion" };
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sensorItems);
@@ -105,8 +113,8 @@ public class AddJobActivity extends Activity implements OnClickListener {
 		btnEndDate.setText(date);
 		btnEndTime.setText(time);
 		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		username = prefs.getString("username", "");
+		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		username = settings.getString(CommonConstants.USERNAME, "");
 	}
 
 	/*
@@ -171,32 +179,47 @@ public class AddJobActivity extends Activity implements OnClickListener {
 			alertDialog.show();
 
 		} else if (v.getId() == R.id.btnJobSave) {
-			Calendar startDatetime = Calendar.getInstance();
-			startDatetime.set(startYear, startMonth, startDay, startHour, startMinute);
-			Calendar endDatetime = Calendar.getInstance();
-			endDatetime.set(endYear, endMonth, endDay, endHour, endMinute);
-			boolean val = startDatetime.before(endDatetime);
+			Calendar startDatetime = null;
+			Calendar endDatetime = null;
+			boolean validStartEndTime = true;
 			
-			if (spinSensorType.getSelectedItem().toString().length() == 0 || editTxtLatitude.getText().length() == 0
-					|| editTxtLongitude.getText().length() == 0 || editTxtLocRange.getText().length() == 0 || editTxtNodes.getText().length() == 0
-					|| editTxtFreq.getText().length() == 0 || editTxtTimePeriod.getText().length() == 0) {
-				Toast.makeText(AddJobActivity.this,
-						"Input Validation failed! All fields should be not null and the end date should be after the start date.", Toast.LENGTH_LONG)
-						.show();
-			} else {
-				boolean issuccess=serviceInvoker.addJob(1, Float.parseFloat(editTxtLatitude.getText().toString()), Float.parseFloat(editTxtLongitude.getText()
-						.toString()), Float.parseFloat(editTxtLocRange.getText().toString()), startDatetime.getTimeInMillis(), endDatetime
-						.getTimeInMillis(), Integer.parseInt(editTxtFreq.getText().toString()), Integer.parseInt(editTxtTimePeriod.getText()
-						.toString()), Integer.parseInt(editTxtNodes.getText().toString()), imei, editTxtDesc.getText().toString(), username);
-				if(issuccess){
-					//TODO: when add job completes go back to the previos step or viewjob.
-					Toast.makeText(AddJobActivity.this, "Job Added Successfully.", Toast.LENGTH_LONG).show();
-					Intent home = new Intent(v.getContext(), HomeActivity.class);
-					startActivityForResult(home, CommonConstants.HOME_REQ_ID);
-					
-				}else{
-					Toast.makeText(AddJobActivity.this, "Job Added Failed! Try again.", Toast.LENGTH_LONG).show();
+			if (chkBxStarttime.isChecked()) {
+				startDatetime = Calendar.getInstance();
+				startDatetime.set(startYear, startMonth, startDay, startHour, startMinute);
+			}
+			if (chkBxEndtime.isChecked()) {
+				endDatetime = Calendar.getInstance();
+				endDatetime.set(endYear, endMonth, endDay, endHour, endMinute);
+				validStartEndTime = Calendar.getInstance().before(endDatetime);
+			}
+			if (validStartEndTime && startDatetime != null && endDatetime != null) {
+				validStartEndTime = startDatetime.before(endDatetime);
+			}
+			if (validStartEndTime) {
+				if (spinSensorType.getSelectedItem().toString().length() == 0 || editTxtLatitude.getText().length() == 0
+						|| editTxtLongitude.getText().length() == 0 || editTxtLocRange.getText().length() == 0
+						|| editTxtNodes.getText().length() == 0 || editTxtFreq.getText().length() == 0 || editTxtTimePeriod.getText().length() == 0) {
+					Toast.makeText(AddJobActivity.this,
+							"Input Validation failed! All fields should be not null and the end date should be after the start date.",
+							Toast.LENGTH_LONG).show();
+				} else {
+					boolean issuccess = serviceInvoker.addJob(1, Float.parseFloat(editTxtLatitude.getText().toString()), Float
+							.parseFloat(editTxtLongitude.getText().toString()), Float.parseFloat(editTxtLocRange.getText().toString()), startDatetime
+							.getTimeInMillis(), endDatetime.getTimeInMillis(), Integer.parseInt(editTxtFreq.getText().toString()), Integer
+							.parseInt(editTxtTimePeriod.getText().toString()), Integer.parseInt(editTxtNodes.getText().toString()), imei, editTxtDesc
+							.getText().toString(), username);
+					if (issuccess) {
+						// when add job completes go back to the previous step or viewjob.
+						Toast.makeText(AddJobActivity.this, "Job Added Successfully.", Toast.LENGTH_LONG).show();
+						Intent home = new Intent(v.getContext(), HomeActivity.class);
+						startActivityForResult(home, CommonConstants.HOME_REQ_ID);
+
+					} else {
+						Toast.makeText(AddJobActivity.this, "Job Added Failed! Try again.", Toast.LENGTH_LONG).show();
+					}
 				}
+			} else {
+				Toast.makeText(AddJobActivity.this, "Invalid StartTime or ExpireTime!", Toast.LENGTH_LONG).show();
 			}
 		}
 		
@@ -282,6 +305,27 @@ public class AddJobActivity extends Activity implements OnClickListener {
 
 		default:
 			return null;
+		}
+	}
+
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		
+		if (buttonView.getId() == R.id.chkBxStarttimeAdd) {
+			if (!isChecked) {
+				btnStartDate.setEnabled(false);
+				btnStartTime.setEnabled(false);
+			}else{
+				btnStartDate.setEnabled(true);
+				btnStartTime.setEnabled(true);
+			}
+		}else if(buttonView.getId() == R.id.chkBxEndtimeAdd){
+			if (!isChecked) {
+				btnEndDate.setEnabled(false);
+				btnEndTime.setEnabled(false);
+			}else{
+				btnEndDate.setEnabled(true);
+				btnEndTime.setEnabled(true);
+			}
 		}
 	}
 

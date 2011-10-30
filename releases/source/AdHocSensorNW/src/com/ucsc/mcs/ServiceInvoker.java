@@ -160,7 +160,7 @@ public class ServiceInvoker {
 	 * @param imei
 	 * @return
 	 */
-	public static boolean uploadData(final String imei, final SensorDao dao) {
+	public static boolean uploadData(final String imei, final String username, final SensorDao dao) {
 
 		//Data should be on this order. job_id, imei, datetime, latitude, longitude, reading
 		StringBuffer data = new StringBuffer();
@@ -186,6 +186,7 @@ public class ServiceInvoker {
 			SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_UPLOAD_DATA);
 			request.addProperty("imei", imei);
 			request.addProperty("data", data.toString());
+			request.addProperty("username", username);
 
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.dotNet = false;
@@ -225,10 +226,10 @@ public class ServiceInvoker {
 	 * @param dao
 	 * @return
 	 */
-	public static boolean sync(final Double latitude, final Double longitude, final String imei, final SensorDao dao){
+	public static boolean sync(final Double latitude, final Double longitude, final String imei, final String username, final SensorDao dao){
 		
 		//Upload local data to server.
-		boolean uploadData = uploadData(imei, dao);
+		boolean uploadData = uploadData(imei, username, dao);
 		//delete onHold and expired jobs from local sqlite databse.
 		long now = System.currentTimeMillis();
 		dao.deleteRecords(SensorDBHelper.JOB_TABLE, SensorDBHelper.JOB_STATUS+" in (3,4) OR "+SensorDBHelper.JOB_EXPIRE_TIME+"<"+now);
