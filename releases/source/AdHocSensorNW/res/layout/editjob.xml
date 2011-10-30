@@ -25,11 +25,13 @@
 				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewStart" android:text="Start Time" android:layout_height="wrap_content"></TextView>
 				<Button android:text="Button" android:id="@+id/btnJobStartDate" android:textSize="12dip" android:layout_height="match_parent" android:layout_width="90dip"></Button>
 				<Button android:text="Button" android:id="@+id/btnJobStartTime" android:textSize="12dip" android:layout_height="match_parent" android:layout_width="60dip"></Button>
+				<CheckBox android:text="CheckBox" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/chkBxStarttime" android:checked="true"></CheckBox>
 			</LinearLayout>
 			<LinearLayout android:id="@+id/linearLayout7" android:layout_width="wrap_content" android:layout_height="35dip">
 				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewEnd" android:text="End Time" android:layout_height="wrap_content"></TextView>
 				<Button android:text="Button" android:id="@+id/btnJobEndDate" android:textSize="12dip" android:layout_height="match_parent" android:layout_width="90dip"></Button>
 				<Button android:text="Button" android:id="@+id/btnJobEndTime" android:textSize="12dip" android:layout_height="match_parent" android:layout_width="60dip"></Button>
+				<CheckBox android:text="CheckBox" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/chkBxEndtime" android:checked="true"></CheckBox>
 			</LinearLayout>
 			<LinearLayout android:id="@+id/linearLayout8" android:layout_width="wrap_content" android:layout_height="35dip">
 				<TextView android:textSize="16px" android:id="@+id/txtViewFreq" android:text="Frequency (min)" android:layout_height="wrap_content" android:layout_width="135dip"></TextView>
