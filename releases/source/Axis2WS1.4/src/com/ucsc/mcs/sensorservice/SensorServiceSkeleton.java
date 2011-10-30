@@ -416,7 +416,7 @@ public class SensorServiceSkeleton {
 				prepStmt.setInt(11, addJobRequestType.getTimePeriod());
 				prepStmt.setString(12, addJobRequestType.getDescription());
 				prepStmt.execute();
-				isSuccess=true;
+				isSuccess = true;
 			}
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while Adding new job. Original stacktrace: " + e.toString());
@@ -454,6 +454,7 @@ public class SensorServiceSkeleton {
 			prepStmt.setString(6, subscribeRequestType.getEmail());
 			prepStmt.execute();
 			isSuccess=true;
+			
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while subscribing nwe user:"+subscribeRequestType.getUsername()+". Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -596,4 +597,59 @@ public class SensorServiceSkeleton {
 		throw new java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#PasswordRecover");
 	}
 
+	/**
+	 * Auto generated method signature
+	 * 
+	 * @param editUserRequestType
+	 */
+
+	public com.ucsc.mcs.sensorservice.EditUserResponseType EditUser(com.ucsc.mcs.sensorservice.EditUserRequestType editUserRequestType) {
+		// TODO : fill this with the necessary business logic
+		throw new java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#EditUser");
+	}
+
+	/**
+	 * Auto generated method signature
+	 * 
+	 * @param editJobRequestType
+	 */
+
+	public com.ucsc.mcs.sensorservice.EditJobResponseType EditJob(com.ucsc.mcs.sensorservice.EditJobRequestType editJobRequestType) {
+		
+		Connection conn;
+		PreparedStatement prepStmt;
+		
+		EditJobResponseType editJobResponse = new EditJobResponseType();
+
+		String sqlJobUpdate = "UPDATE job j, user u SET j.nodes=?,j.latitude=?,j.longitude=?,j.loc_range=?,j.start_time=?,j.expire_time=?,j.frequency=?,j.time_period=?,j.description=? " +
+								"WHERE j.user_id=u.id AND j.id=? AND u.username=?";
+		boolean isSuccess = false;
+		
+		try {
+			conn = getMySqlConnection();
+			
+			prepStmt = conn.prepareStatement(sqlJobUpdate);
+			prepStmt.setInt(1, editJobRequestType.getNodes());
+			prepStmt.setFloat(2, editJobRequestType.getLatitude());
+			prepStmt.setFloat(3, editJobRequestType.getLongitude());
+			prepStmt.setFloat(4, editJobRequestType.getLocRange());
+			//prepStmt.setTimestamp(5, (editJobRequestType.getStarttime()==0)?null:new Timestamp(editJobRequestType.getStarttime())); This is to set null when time is not set.
+			prepStmt.setTimestamp(5, new Timestamp(editJobRequestType.getStarttime()));
+			prepStmt.setTimestamp(6, new Timestamp(editJobRequestType.getEndtime()));
+			prepStmt.setInt(7, editJobRequestType.getFrequency());
+			prepStmt.setInt(8, editJobRequestType.getTimePeriod());
+			prepStmt.setString(9, editJobRequestType.getDescription());
+			prepStmt.setLong(10, editJobRequestType.getJobId());
+			prepStmt.setString(11, editJobRequestType.getUsername());
+			prepStmt.execute();
+			isSuccess=true;
+			
+		} catch (NamingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while Updating new job. Original stacktrace: " + e.toString());
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Error occurred while Updating new job. Original stacktrace: " + e.toString());
+		}
+		editJobResponse.setEditJobResponseType(isSuccess);
+		return editJobResponse;
+	}
 }
