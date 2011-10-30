@@ -118,6 +118,38 @@
             	</xsd:complexType>
             </xsd:element>
             <xsd:element name="PasswordRecoverResponseType" type="xsd:boolean"></xsd:element>
+            <xsd:element name="EditJobRequestType">
+            	<xsd:complexType>
+            		<xsd:sequence>
+            			<xsd:element name="sensorType" type="xsd:int"></xsd:element>
+            			<xsd:element name="latitude" type="xsd:float"></xsd:element>
+            			<xsd:element name="longitude" type="xsd:float"></xsd:element>
+            			<xsd:element name="locRange" type="xsd:float"></xsd:element>
+            			<xsd:element name="starttime" type="xsd:long"></xsd:element>
+            			<xsd:element name="endtime" type="xsd:long"></xsd:element>
+            			<xsd:element name="frequency" type="xsd:int"></xsd:element>
+            			<xsd:element name="timePeriod" type="xsd:int"></xsd:element>
+            			<xsd:element name="Nodes" type="xsd:int"></xsd:element>
+            			<xsd:element name="username" type="xsd:string"></xsd:element>
+            			<xsd:element name="imei" type="xsd:string"></xsd:element>
+            			<xsd:element name="description" type="xsd:string"></xsd:element>
+            			<xsd:element name="jobId" type="xsd:long"></xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="EditJobResponseType" type="xsd:boolean"></xsd:element>
+            <xsd:element name="EditUserRequestType">
+            	<xsd:complexType>
+            		<xsd:sequence>
+            			<xsd:element name="username" type="xsd:string"></xsd:element>
+						<xsd:element name="password" type="xsd:string"></xsd:element>
+						<xsd:element name="imei" type="xsd:string"></xsd:element>
+						<xsd:element name="email" type="xsd:string"></xsd:element>
+						<xsd:element name="fullname" type="xsd:string"></xsd:element>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="EditUserResponseType" type="xsd:boolean"></xsd:element>
         </xsd:schema>
 	</wsdl:types>
 	<wsdl:message name="CalculateRectAreaResponse">
@@ -192,6 +224,18 @@
 	<wsdl:message name="PasswordRecoverResponse">
 		<wsdl:part name="PasswordRecoverResponse" element="tns:PasswordRecoverResponseType"></wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="EditJobRequest">
+		<wsdl:part name="EditJobRequest" element="tns:EditJobRequestType"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="EditJobResponse">
+		<wsdl:part name="EditJobResponse" element="tns:EditJobResponseType"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="EditUserRequest">
+		<wsdl:part name="EditUserRequest" element="tns:EditUserRequestType"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="EditUserResponse">
+		<wsdl:part name="EditUserResponse" element="tns:EditUserResponseType"></wsdl:part>
+	</wsdl:message>
 	<wsdl:portType name="SensorService">
 		<wsdl:operation name="CalculateRectArea">
 			<wsdl:input message="tns:CalculateRectAreaRequest" />
@@ -240,6 +284,14 @@
 		<wsdl:operation name="PasswordRecover">
 			<wsdl:input message="tns:PasswordRecoverRequest"></wsdl:input>
 			<wsdl:output message="tns:PasswordRecoverResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EditJob">
+			<wsdl:input message="tns:EditJobRequest"></wsdl:input>
+			<wsdl:output message="tns:EditJobResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EditUser">
+			<wsdl:input message="tns:EditUserRequest"></wsdl:input>
+			<wsdl:output message="tns:EditUserResponse"></wsdl:output>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="SensorServiceSOAP" type="tns:SensorService">
@@ -345,6 +397,24 @@
 		</wsdl:operation>
 		<wsdl:operation name="PasswordRecover">
 			<soap:operation soapAction="http://mcs.ucsc.com/SensorService/PasswordRecover" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EditJob">
+			<soap:operation soapAction="http://mcs.ucsc.com/SensorService/EditJob" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EditUser">
+			<soap:operation soapAction="http://mcs.ucsc.com/SensorService/EditUser" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
