@@ -183,7 +183,16 @@ public class SensorServiceSkeleton {
 			conn = getMySqlConnection();
 			conn.setAutoCommit(false);
 			
-			sql = "INSERT INTO data(job_id, imei, datetime, latitude, longitude, reading) VALUES(?,?,?,?,?,?)";
+			long userId = -1;
+			String sqlUsername = "SELECT id FROM user WHERE username=?";
+			PreparedStatement prepStmtUsername = conn.prepareStatement(sqlUsername);
+			prepStmtUsername.setString(1, uploadDataReuestType.getUsername());
+			ResultSet resultUsername = prepStmtUsername.executeQuery();
+			if (resultUsername.first()) {
+				userId = resultUsername.getLong("id");
+			}
+			
+			sql = "INSERT INTO data(job_id, imei, datetime, latitude, longitude, reading, user_id) VALUES(?,?,?,?,?,?,?)";
 			prepStmt = conn.prepareStatement(sql); 
 
 			for (int i = 0; i < rawArray.length; i++) {
@@ -195,6 +204,7 @@ public class SensorServiceSkeleton {
 				prepStmt.setDouble(4, Double.parseDouble(raw[3]));
 				prepStmt.setDouble(5, Double.parseDouble(raw[4]));
 				prepStmt.setDouble(6, Double.parseDouble(raw[5]));
+				prepStmt.setLong(7, userId);
 				prepStmt.addBatch();
 			}
 			
