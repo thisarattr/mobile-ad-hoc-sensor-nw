@@ -6,7 +6,9 @@ package com.ucsc.mcs;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +48,13 @@ public class LoginActivity extends Activity implements OnClickListener{
 		btnSignup = (Button)findViewById(R.id.btnSignupLogin);
 		btnLogin.setOnClickListener(this);
 		btnSignup.setOnClickListener(this);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String username = prefs.getString("username", "");
+		String password = prefs.getString("password", "");
+		
+		editTxtUsername.setText(username);
+		editTxtPassword.setText(password);
 	}
 
 	public void onClick(View v) {
@@ -53,22 +62,26 @@ public class LoginActivity extends Activity implements OnClickListener{
 		if (v.getId() == R.id.btnLogin) {
 			
 			TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-			String loginOut = ServiceInvoker.login(editTxtUsername.getText().toString(), editTxtPassword.getText().toString(), telephonyManager
+			String loginResponse = ServiceInvoker.login(editTxtUsername.getText().toString(), editTxtPassword.getText().toString(), telephonyManager
 					.getDeviceId());
 
-			if (loginOut.equals("true") || loginOut.equals("false")) {
-				boolean isSuccess = Boolean.valueOf(loginOut);
+			if (loginResponse.equals("true") || loginResponse.equals("false")) {
+				boolean loginSuccess = Boolean.valueOf(loginResponse);
 
-				// TODO isLogin must be there...
-				if (true) {
-					CommonConstants.USERNAME = editTxtUsername.getText().toString();
+				if (loginSuccess) {
+					SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+					SharedPreferences.Editor editor = settings.edit();
+					editor.putString(CommonConstants.USERNAME, editTxtUsername.getText().toString().trim());
+					editor.putString(CommonConstants.PASSWORD, editTxtPassword.getText().toString().trim());
+					editor.commit();
+
 					Intent home = new Intent(v.getContext(), HomeActivity.class);
 					startActivityForResult(home, CommonConstants.HOME_REQ_ID);
 				} else {
 					txtViewLoginError.setText("Invalid username or password!");
 				}
 			} else {
-				Toast.makeText(LoginActivity.this, loginOut, Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, loginResponse, Toast.LENGTH_LONG).show();
 			}
 
 		}else if(v.getId() == R.id.btnSignupLogin){

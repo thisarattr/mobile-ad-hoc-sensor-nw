@@ -19,6 +19,7 @@ public class PrefsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "Preference activity created.");
 		super.onCreate(savedInstanceState);
+		
 		addPreferencesFromResource(R.xml.prefs);
 	}
 

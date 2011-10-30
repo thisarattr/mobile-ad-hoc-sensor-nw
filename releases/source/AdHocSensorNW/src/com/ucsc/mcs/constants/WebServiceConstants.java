@@ -11,6 +11,7 @@ public class WebServiceConstants {
 
 	public static final String NAMESPACE = "http://mcs.ucsc.com/SensorService/";
 	public static final String URL = "http://192.168.1.110:8090/Axis2WS1.4/services/SensorService";
+	//public static final String URL = "http://192.168.1.110:8090/SensorService/services/SensorService";
 	//public static final String URL = "http://192.168.43.28:8090/Axis2WS1.4/services/SensorService";
 	//public static final String URL = "http://www.mobilesensornw.hostjava.net/Axis2WS1.4/services/SensorService";
 	//public static final String URL = "https://192.168.1.110:8443/Axis2WS1.4/services/SensorService";
@@ -50,6 +51,12 @@ public class WebServiceConstants {
 	
 	public static final String SOAP_ACTION_PASSWORD_RECOVER = "http://mcs.ucsc.com/SensorService/PasswordRecover";
 	public static final String REQUEST_TYPE_PASSWORD_RECOVER = "PasswordRecoverRequestType";
+	
+	public static final String SOAP_ACTION_EDIT_JOB = "http://mcs.ucsc.com/SensorService/EditJob";
+	public static final String REQUEST_TYPE_EDIT_JOB = "EditJobRequestType";
+	
+	public static final String SOAP_ACTION_EDIT_USER = "http://mcs.ucsc.com/SensorService/EditUser";
+	public static final String REQUEST_TYPE_EDIT_USER  = "EditUserRequestType";
 	
 	
 }

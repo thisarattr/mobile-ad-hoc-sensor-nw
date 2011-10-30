@@ -22,7 +22,8 @@ public class CommonConstants {
 	public static final int LOGIN_REQ_ID = 5;
 	public static final int VIEW_JOB_REQ_ID = 6;
 	
-	public static String USERNAME;
+	public static String USERNAME="username";
+	public static String PASSWORD="password";
 	
 	
 }

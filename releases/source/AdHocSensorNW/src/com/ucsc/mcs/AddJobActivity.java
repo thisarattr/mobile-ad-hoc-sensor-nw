@@ -15,7 +15,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +46,7 @@ public class AddJobActivity extends Activity implements OnClickListener {
 	private int startYear, startMonth, startDay, startHour, startMinute, endYear, endMonth, endDay, endHour, endMinute;
 	private String imei;
 	private ServiceInvoker serviceInvoker;
+	private String username;
 
 	/*
 	 * (non-Javadoc)
@@ -101,7 +104,9 @@ public class AddJobActivity extends Activity implements OnClickListener {
 		btnStartTime.setText(time);
 		btnEndDate.setText(date);
 		btnEndTime.setText(time);
-
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		username = prefs.getString("username", "");
 	}
 
 	/*
@@ -182,7 +187,7 @@ public class AddJobActivity extends Activity implements OnClickListener {
 				boolean issuccess=serviceInvoker.addJob(1, Float.parseFloat(editTxtLatitude.getText().toString()), Float.parseFloat(editTxtLongitude.getText()
 						.toString()), Float.parseFloat(editTxtLocRange.getText().toString()), startDatetime.getTimeInMillis(), endDatetime
 						.getTimeInMillis(), Integer.parseInt(editTxtFreq.getText().toString()), Integer.parseInt(editTxtTimePeriod.getText()
-						.toString()), Integer.parseInt(editTxtNodes.getText().toString()), imei, editTxtDesc.getText().toString());
+						.toString()), Integer.parseInt(editTxtNodes.getText().toString()), imei, editTxtDesc.getText().toString(), username);
 				if(issuccess){
 					//TODO: when add job completes go back to the previos step or viewjob.
 					Toast.makeText(AddJobActivity.this, "Job Added Successfully.", Toast.LENGTH_LONG).show();

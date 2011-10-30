@@ -259,7 +259,7 @@ public class ServiceInvoker {
 	 * @return
 	 */
 	public boolean addJob(final int sensorId, final float latitude, final float longitude, final float locRange, final long starttime,
-			final long endtime, final int frequency, final int timePeriod, final int nodes, final String imei, final String description) {
+			final long endtime, final int frequency, final int timePeriod, final int nodes, final String imei, final String description, final String username) {
 		boolean isSuccess = false;
 
 		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_ADD_JOB);
@@ -272,7 +272,7 @@ public class ServiceInvoker {
 		request.addProperty("frequency", frequency);
 		request.addProperty("timePeriod", timePeriod);
 		request.addProperty("Nodes", nodes);
-		request.addProperty("username", CommonConstants.USERNAME);
+		request.addProperty("username", username);
 		request.addProperty("imei", imei);
 		request.addProperty("description", description);
 
@@ -406,6 +406,50 @@ public class ServiceInvoker {
 		}
 		
 		return dataList;
+	}
+	
+	public boolean editJob(final int sensorId, final float latitude, final float longitude, final float locRange, final long starttime,
+			final long endtime, final int frequency, final int timePeriod, final int nodes, final String imei, final String description, final long jobId, final String username){
+		
+		boolean isSuccess = false;
+
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_EDIT_JOB);
+		request.addProperty("sensorType", sensorId);
+		request.addProperty("latitude", latitude);
+		request.addProperty("longitude", longitude);
+		request.addProperty("locRange", locRange);
+		request.addProperty("starttime", starttime);
+		request.addProperty("endtime", endtime);
+		request.addProperty("frequency", frequency);
+		request.addProperty("timePeriod", timePeriod);
+		request.addProperty("Nodes", nodes);
+		request.addProperty("username", username);
+		request.addProperty("imei", imei);
+		request.addProperty("description", description);
+		request.addProperty("jobId", jobId);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		// For float marshaling. This is needed if u r using types that are not
+		// defined on PropertyInfo class.
+		Marshal floatMarshal = new MarshalFloat();
+		floatMarshal.register(envelope);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_EDIT_JOB, envelope);
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when invoking GetJobs service. Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when invoking GetJobs service. Original Error:" + e.toString());
+		}
+		
+		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+		isSuccess=Boolean.parseBoolean(sp.toString());
+		return isSuccess;
 	}
 
 }
