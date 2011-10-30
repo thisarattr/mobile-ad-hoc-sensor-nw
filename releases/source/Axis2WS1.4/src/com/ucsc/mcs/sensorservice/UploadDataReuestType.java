@@ -92,6 +92,36 @@
                                }
                             
 
+                        /**
+                        * field for Username
+                        */
+
+                        
+                                    protected java.lang.String localUsername ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getUsername(){
+                               return localUsername;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param Username
+                               */
+                               public void setUsername(java.lang.String param){
+                            
+                                            this.localUsername=param;
+                                    
+
+                               }
+                            
+
      /**
      * isReaderMTOMAware
      * @return true if the reader supports MTOM
@@ -252,6 +282,40 @@
 
                                         
                                                    xmlWriter.writeCharacters(localData);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"username", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"username");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("username");
+                                    }
+                                
+
+                                          if (localUsername==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("username cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localUsername);
                                             
                                           }
                                     
@@ -437,6 +501,15 @@
                                            throw new org.apache.axis2.databinding.ADBException("data cannot be null!!");
                                         }
                                     
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "username"));
+                                 
+                                        if (localUsername != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localUsername));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("username cannot be null!!");
+                                        }
+                                    
 
                 return new org.apache.axis2.databinding.utils.reader.ADBXMLStreamReaderImpl(qName, elementList.toArray(), attribList.toArray());
             
@@ -539,6 +612,25 @@
                                     java.lang.String content = reader.getElementText();
                                     
                                               object.setData(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","username").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setUsername(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();
