@@ -28,6 +28,7 @@
 					<xsd:sequence>
 						<xsd:element name="imei" type="xsd:string" />
 						<xsd:element name="data" type="xsd:string" />
+						<xsd:element name="username" type="xsd:string"></xsd:element>
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
