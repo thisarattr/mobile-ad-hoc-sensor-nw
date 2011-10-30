@@ -49,7 +49,11 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
 		// Access saved preferences
-		String username = prefs.getString("username", "");
+		String uname = prefs.getString("username", "");
+		//Access custom preferences
+		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		String username = settings.getString(CommonConstants.USERNAME, "");
+		String password = settings.getString(CommonConstants.PASSWORD, "");
 
 		// Initialize UI components
 		txtReadingValue = (TextView) findViewById(R.id.txtViewReadingVal);

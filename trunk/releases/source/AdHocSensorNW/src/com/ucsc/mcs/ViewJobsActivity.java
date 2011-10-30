@@ -3,19 +3,16 @@
  */
 package com.ucsc.mcs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -26,7 +23,7 @@ import android.widget.Toast;
  */
 public class ViewJobsActivity extends ListActivity {
 
-	//private ListView listVwJobs;
+	private String username;
 	
 	
 	/* (non-Javadoc)
@@ -39,8 +36,11 @@ public class ViewJobsActivity extends ListActivity {
 		ServiceInvoker serviceInvoker = new ServiceInvoker();
 		List<Map<String, String>> dataList = null;
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		username = prefs.getString("username", "");
+		
 		try {
-			dataList = serviceInvoker.viewJobs("0000-0000-0000", "thisara");
+			dataList = serviceInvoker.viewJobs("0000-0000-0000", username);
 
 			SimpleAdapter adpter = new SimpleAdapter(this, dataList, R.layout.viewjob_row, new String[] { ServiceInvoker.VIEWJOB_ID,
 					ServiceInvoker.VIEWJOB_DATATIME, ServiceInvoker.VIEWJOB_LAT, ServiceInvoker.VIEWJOB_LONG }, new int[] { R.id.JOBVIEW_ID,
