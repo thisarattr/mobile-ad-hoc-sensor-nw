@@ -38,17 +38,21 @@ public class SensorServiceSkeleton {
 	private static final double RADIAN = 0.017453293;
 	private static final Logger LOG = Logger.getLogger(SensorServiceSkeleton.class.getCanonicalName());
 	
+	private DataSource ds = null; 
+	
 	/**
 	 * @return
 	 * @throws NamingException
 	 * @throws SQLException
 	 */
 	private Connection getMySqlConnection() throws NamingException, SQLException {
-		
-		Context initCtx;
-		initCtx = new InitialContext();
-		Context envCtx = (Context) initCtx.lookup("java:comp/env");
-		DataSource ds = (DataSource) envCtx.lookup("jdbc/sensornw");
+
+		if (ds == null) {
+			Context initCtx;
+			initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			ds = (DataSource) envCtx.lookup("jdbc/sensornw");
+		}
 
 		return ds.getConnection();
 	}
