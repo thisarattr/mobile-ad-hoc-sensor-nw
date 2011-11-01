@@ -16,9 +16,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -42,6 +45,8 @@ public class AddJobActivity extends Activity implements OnClickListener, OnCheck
 	static final int ID_START_TIMEPICKER = 1;
 	static final int ID_END_DATEPICKER = 3;
 	static final int ID_END_TIMEPICKER = 4;
+	
+	private static final String TAG = AddJobActivity.class.getSimpleName();
 
 	private Spinner spinSensorType;
 	private EditText editTxtLatitude, editTxtLongitude, editTxtLocRange, editTxtFreq, editTxtTimePeriod, editTxtNodes, editTxtDesc;
@@ -51,6 +56,11 @@ public class AddJobActivity extends Activity implements OnClickListener, OnCheck
 	private String imei;
 	private ServiceInvoker serviceInvoker;
 	private String username;
+	
+	// Location related
+	private LocationManager mlocManager;
+	private SensorLocationListener mlocListener;
+	
 
 	/*
 	 * (non-Javadoc)
@@ -115,6 +125,35 @@ public class AddJobActivity extends Activity implements OnClickListener, OnCheck
 		
 		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
 		username = settings.getString(CommonConstants.USERNAME, "");
+		
+		// Location service initialization
+		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		mlocListener = new SensorLocationListener();
+		Location loc = null;
+		
+		if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+			loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			Log.d(TAG, "GPS provider enabled and using.");
+		} else if (mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+			mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mlocListener);
+			loc = mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			Log.d(TAG, "GPS provider disabled and using network provider.");
+		} else {
+			//send dialog box saying gps disabled.
+			Toast.makeText(AddJobActivity.this, "Location Services are disables. Enable it to continue.", Toast.LENGTH_LONG).show();
+			Log.d(TAG, "GPS provider and network provider both disabled.");
+			Intent gspSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			startActivityForResult(gspSettings, 0);
+		}
+		
+		if (loc != null) {
+			mlocListener.setLatitude(loc.getLatitude());
+			mlocListener.setLongitute(loc.getLongitude());
+		}
+		
+		editTxtLatitude.setText(mlocListener.getLatitude().toString());
+		editTxtLongitude.setText(mlocListener.getLongitute().toString());
 	}
 
 	/*
@@ -204,8 +243,8 @@ public class AddJobActivity extends Activity implements OnClickListener, OnCheck
 							Toast.LENGTH_LONG).show();
 				} else {
 					boolean issuccess = serviceInvoker.addJob(1, Float.parseFloat(editTxtLatitude.getText().toString()), Float
-							.parseFloat(editTxtLongitude.getText().toString()), Float.parseFloat(editTxtLocRange.getText().toString()), startDatetime
-							.getTimeInMillis(), endDatetime.getTimeInMillis(), Integer.parseInt(editTxtFreq.getText().toString()), Integer
+							.parseFloat(editTxtLongitude.getText().toString()), Float.parseFloat(editTxtLocRange.getText().toString()), (startDatetime!=null)?startDatetime
+							.getTimeInMillis():0, (endDatetime!=null)?endDatetime.getTimeInMillis():0, Integer.parseInt(editTxtFreq.getText().toString()), Integer
 							.parseInt(editTxtTimePeriod.getText().toString()), Integer.parseInt(editTxtNodes.getText().toString()), imei, editTxtDesc
 							.getText().toString(), username);
 					if (issuccess) {
