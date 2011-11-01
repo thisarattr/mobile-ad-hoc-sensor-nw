@@ -14,10 +14,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ucsc.mcs.constants.CommonConstants;
 
@@ -89,18 +91,32 @@ public class RecorderService extends Service {
 		mSensorListener = new SensorListener();
 		mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
+		// Location service initialization
 		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		mlocListener = new SensorLocationListener();
+		Location loc = null;
 		
 		if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+			loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			Log.d(TAG, "GPS provider enabled and using.");
 		} else if (mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 			mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mlocListener);
+			loc = mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			Log.d(TAG, "GPS provider disabled and using network provider.");
 		} else {
-			//send dialog box saying gps disabled.
 			Log.d(TAG, "GPS provider and network provider both disabled.");
+			Toast.makeText(this, "Location Services are disables. Enable it to continue.", Toast.LENGTH_LONG).show();
+			//TODO do something to make this enable GPS.
+/*			stopService(new Intent(this, RecorderService.class));
+			Intent gspSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			gspSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			getApplication().startActivity(gspSettings);*/
+		}
+		
+		if (loc != null) {
+			mlocListener.setLatitude(loc.getLatitude());
+			mlocListener.setLongitute(loc.getLongitude());
 		}
 		
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);

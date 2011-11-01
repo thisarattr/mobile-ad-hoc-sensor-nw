@@ -57,4 +57,20 @@ public class SensorLocationListener implements LocationListener {
 		return latitude;
 	}
 
+	/**
+	 * @param latitude the latitude to set
+	 */
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	/**
+	 * @param longitute the longitute to set
+	 */
+	public void setLongitute(Double longitute) {
+		this.longitute = longitute;
+	}
+	
+	
+
 }

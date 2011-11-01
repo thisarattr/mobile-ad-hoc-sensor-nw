@@ -12,7 +12,7 @@ public class CommonConstants {
 	public static final String ROW_DELEMETER = "\n";
 	public static final String DATA_DELEMETER = ",";
 	public static final double RADIAN = 0.017453293;
-	public static final long R = 6371; //radius of the earth
+	public static final long R = 6371; //radius of the earth in KM
 
 	
 	public static final int HOME_REQ_ID = 1;
