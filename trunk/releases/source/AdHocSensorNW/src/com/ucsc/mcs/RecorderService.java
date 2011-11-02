@@ -209,7 +209,7 @@ public class RecorderService extends Service {
 					while (jobStatus == SensorDBHelper.JOB_STATUS_NEW || jobStatus == SensorDBHelper.JOB_STATUS_RUNNING) {
 
 						// increment the upload counter by to identify the upload time.
-						uploadConter = +1;
+						uploadConter += 1;
 						// Upload data
 						if (UPLOAD_TIMEOUT <= uploadConter * jobFrequency * MIN_DELAY) {
 							boolean isUploadSuccess = ServiceInvoker.uploadData(imei, username, sensorDao);
@@ -294,6 +294,9 @@ public class RecorderService extends Service {
 								updateJobStatus(jobStatus, jobId);
 							}
 						}// end of if else
+						if(!recService.runFlag){
+							break; //cos even when the service stops this will run until control comes to above while condition. therefore it needs to be break. 
+						}
 					}// end of job while
 				}else{// no jobs find on the system
 					try {
