@@ -211,7 +211,7 @@ public class SensorServiceSkeleton {
 				prepStmt.setLong(7, userId);
 				prepStmt.addBatch();
 			}
-			
+			System.out.println(new Timestamp(System.currentTimeMillis()).toString()+": "+ rawArray.length+" numbers of records trying upload by user "+uploadDataReuestType.getUsername());
 			int[] array = prepStmt.executeBatch();
 			boolean isSuccess = true;
 			for (int i = 0; i < array.length; i++) {
@@ -227,6 +227,7 @@ public class SensorServiceSkeleton {
 				prepStmt = conn.prepareStatement(sql);
 				prepStmt.setString(1, uploadDataReuestType.getImei());
 				prepStmt.execute();
+				System.out.println(new Timestamp(System.currentTimeMillis()).toString()+": "+uploadDataReuestType.getUsername()+" user: Data upload successful.");
 				
 			} else {
 				conn.rollback();
@@ -293,7 +294,7 @@ public class SensorServiceSkeleton {
 					"AND j.id NOT IN ("+currJobSet+") AND node_count<nodes AND IF(UNIX_TIMESTAMP(expire_time)=0,true,expire_time>=now()) ORDER BY tempjob.start_time ASC, u.rank DESC";
 		
 			
-			System.out.println(sql);
+			System.out.println(new Timestamp(System.currentTimeMillis()).toString()+ ": " +sql);
 			prepStmt = conn.prepareStatement(sql); 
 			resultSet = prepStmt.executeQuery();
 			
