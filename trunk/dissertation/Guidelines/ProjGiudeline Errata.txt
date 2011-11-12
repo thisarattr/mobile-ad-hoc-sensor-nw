@@ -1,0 +1,15 @@
+1. Page 6: A comparison of alternative design strategies
+
+The figures in reference [2] that you should refer are figures 11.4 and 11.5.
+
+2. Page 10: paragraph 2
+
+All page numbers should be placed at the bottom center of the page.
+
+3. Page 16: Item 5 example 1
+
+We wish to state the following: For maximum speed, all programs should only use data that are local. Non-local data will always have some latencies attached.
+
+4. Page 17: 3.3, item 5
+
+...used to indicate possession. 
