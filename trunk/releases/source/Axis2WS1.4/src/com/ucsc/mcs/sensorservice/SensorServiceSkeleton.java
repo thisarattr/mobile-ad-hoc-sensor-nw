@@ -494,8 +494,8 @@ public class SensorServiceSkeleton {
 		
 		ViewDataResponseType viewDataResponse = new ViewDataResponseType();
 		
-		String sql = "SELECT d.id, d.datetime,d.latitude,d.longitude,d.reading " +
-				"FROM data d, (SELECT j.id FROM job j INNER JOIN user u ON j.user_id=u.id WHERE username=? AND j.id=?) tmp " +
+		String sql = "SELECT d.id, d.datetime,d.latitude,d.longitude,d.reading, tmp.username " +
+				"FROM data d, (SELECT j.id, u.username FROM job j INNER JOIN user u ON j.user_id=u.id WHERE username=? AND j.id=?) tmp " +
 				"WHERE d.job_id=tmp.id";
 		StringBuffer output = new StringBuffer();
 		
@@ -511,7 +511,8 @@ public class SensorServiceSkeleton {
 				output.append(resultSet.getTimestamp("datetime").getTime()+DATA_DELEMETER);
 				output.append(resultSet.getDouble("latitude")+DATA_DELEMETER);
 				output.append(resultSet.getDouble("longitude")+DATA_DELEMETER);
-				output.append(resultSet.getDouble("reading"));
+				output.append(resultSet.getDouble("reading")+DATA_DELEMETER);
+				output.append(resultSet.getString("username"));
 				if(!resultSet.isLast()){
 					output.append(ROW_DELEMETER);
 				}
