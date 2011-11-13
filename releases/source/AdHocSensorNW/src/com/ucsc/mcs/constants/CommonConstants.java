@@ -26,4 +26,24 @@ public class CommonConstants {
 	public static String PASSWORD="password";
 	
 	
+	public static final String VIEWJOB_ID = "id";
+	public static final String VIEWJOB_SENSORNAME = "sensor_name";
+	public static final String VIEWJOB_STARTTIME = "start_time";
+	public static final String VIEWJOB_EXPIRETIME = "expire_time";
+	public static final String VIEWJOB_FREQ = "frequency";
+	public static final String VIEWJOB_TIMEPERIOD = "time_period";
+	public static final String VIEWJOB_LAT = "latitude";
+	public static final String VIEWJOB_LONG = "longitude";
+	public static final String VIEWJOB_LOCRANGE = "loc_range";
+	public static final String VIEWJOB_NODES = "nodes";
+	public static final String VIEWJOB_DESC = "description";
+	public static final String VIEWJOB_DATATIME = "datetime";
+	
+	
+	public static final String VIEWDATA_ID = "id";
+	public static final String VIEWDATA_TIMESTAMP = "datetime";
+	public static final String VIEWDATA_LAT = "latitude";
+	public static final String VIEWDATA_LONG = "longitude";
+	public static final String VIEWDATA_READING = "reading";
+	public static final String VIEWDATA_USER = "username";
 }

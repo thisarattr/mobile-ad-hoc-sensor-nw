@@ -23,18 +23,18 @@ import com.ucsc.mcs.dto.Dimensions;
  * @author thisara
  * 
  */
-public class DisplayRecordActivity extends Activity {
+public class ServiceCallTestActivity extends Activity {
 
 	/** Called when the activity is first created. */
 
 	TextView viewAllRecords;
 
-	private static final String TAG = DisplayRecordActivity.class.getSimpleName();
+	private static final String TAG = ServiceCallTestActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.display_record);
+		setContentView(R.layout.service_test);
 
 		// Initialize UI components
 		viewAllRecords = (TextView) findViewById(R.id.txtViewAllRecords);

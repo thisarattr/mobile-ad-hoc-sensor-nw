@@ -102,7 +102,7 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		spinSensorType.setEnabled(false);
 
 		final Calendar startDate = Calendar.getInstance();
-		long starttimeMillis = Long.parseLong((String)b.get(ServiceInvoker.VIEWJOB_STARTTIME));
+		long starttimeMillis = Long.parseLong((String)b.get(CommonConstants.VIEWJOB_STARTTIME));
 		if(starttimeMillis!=0){
 			startDate.setTimeInMillis(starttimeMillis);
 		}else{
@@ -115,7 +115,7 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		startMinute = startDate.get(Calendar.MINUTE);
 		
 		final Calendar endDate = Calendar.getInstance();
-		long endtimeMillis = Long.parseLong((String)b.get(ServiceInvoker.VIEWJOB_EXPIRETIME));
+		long endtimeMillis = Long.parseLong((String)b.get(CommonConstants.VIEWJOB_EXPIRETIME));
 		if(endtimeMillis!=0){
 			endDate.setTimeInMillis(endtimeMillis);
 		}else{
@@ -136,17 +136,17 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		btnEndDate.setText(formatEndDate);
 		btnEndTime.setText(formatEndTime);
 		
-		editTxtLatitude.setText((String)b.get(ServiceInvoker.VIEWJOB_LAT));
-		editTxtLongitude.setText((String)b.get(ServiceInvoker.VIEWJOB_LONG));
-		editTxtLocRange.setText((String)b.get(ServiceInvoker.VIEWJOB_LOCRANGE));
-		editTxtFreq.setText((String)b.get(ServiceInvoker.VIEWJOB_FREQ));
-		editTxtTimePeriod.setText((String)b.get(ServiceInvoker.VIEWJOB_TIMEPERIOD));
-		editTxtNodes.setText((String)b.get(ServiceInvoker.VIEWJOB_NODES));
-		String desc = (String) b.get(ServiceInvoker.VIEWJOB_DESC);
+		editTxtLatitude.setText((String)b.get(CommonConstants.VIEWJOB_LAT));
+		editTxtLongitude.setText((String)b.get(CommonConstants.VIEWJOB_LONG));
+		editTxtLocRange.setText((String)b.get(CommonConstants.VIEWJOB_LOCRANGE));
+		editTxtFreq.setText((String)b.get(CommonConstants.VIEWJOB_FREQ));
+		editTxtTimePeriod.setText((String)b.get(CommonConstants.VIEWJOB_TIMEPERIOD));
+		editTxtNodes.setText((String)b.get(CommonConstants.VIEWJOB_NODES));
+		String desc = (String) b.get(CommonConstants.VIEWJOB_DESC);
 		if (!desc.equalsIgnoreCase("null")) {
 			editTxtDesc.setText(desc);
 		}
-		jobId = Long.parseLong((String)b.get(ServiceInvoker.VIEWJOB_ID));
+		jobId = Long.parseLong((String)b.get(CommonConstants.VIEWJOB_ID));
 		
 		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
 		username = settings.getString(CommonConstants.USERNAME, "");
