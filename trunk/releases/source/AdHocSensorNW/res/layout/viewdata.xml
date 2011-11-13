@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="fill_parent" android:layout_width="fill_parent">
+	<LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="fill_parent">
+		<ListView android:layout_width="match_parent" android:id="@+id/listViewData" android:layout_height="fill_parent" ></ListView>
+	</LinearLayout>
+	<LinearLayout android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:layout_width="fill_parent">
+		<Button android:layout_height="wrap_content" android:layout_width="match_parent" android:text="Email Data" android:id="@+id/btnEmailFooter"></Button>
+	</LinearLayout>
+</LinearLayout>
