@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+
+	<TextView android:layout_width="50px" android:layout_height="wrap_content" android:id="@+id/JOBDATA_ID" />
+
+	<TextView android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/JOBDATA_DATE" android:layout_width="145px" />
+
+	<TextView android:layout_width="120px" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/JOBDATA_LAT" />
+
+	<TextView android:layout_width="120px" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/JOBDATA_LONG" />
+	<TextView android:layout_width="120px" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/JOBDATA_READING" />
+	<TextView android:layout_width="120px" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/JOBDATA_USER" />
+</LinearLayout>
