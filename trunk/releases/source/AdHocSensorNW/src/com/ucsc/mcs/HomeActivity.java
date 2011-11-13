@@ -162,7 +162,7 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.btnViewData) {
-			Intent viewAllData = new Intent(v.getContext(), DisplayRecordActivity.class);
+			Intent viewAllData = new Intent(v.getContext(), ServiceCallTestActivity.class);
 			startActivityForResult(viewAllData, CommonConstants.VIEW_DATA_REQ_ID);
 			txtBtnClicked.setText("Button Clicked!!!");
 			
