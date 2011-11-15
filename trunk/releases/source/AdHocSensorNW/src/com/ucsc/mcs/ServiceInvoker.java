@@ -497,5 +497,40 @@ public class ServiceInvoker {
 		
 		return dataList;
 	}
+	
+
+	/**
+	 * @param jobId
+	 * @param username
+	 * @return
+	 */
+	public Boolean emailData(final Long jobId, final String username) {
+
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_EMAIL_DATA);
+		request.addProperty("jobId", jobId);
+		request.addProperty("imei", username);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		// For float marshaling. This is needed if u r using types that are not
+		// defined on PropertyInfo class.
+		Marshal floatMarshal = new MarshalFloat();
+		floatMarshal.register(envelope);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_EMAIL_DATA, envelope);
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when invoking Email Data for Job ID: " + jobId + ". Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when invoking Email Data for Job ID: " + jobId + ". Original Error:" + e.toString());
+		}
+
+		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+		return Boolean.parseBoolean(sp.toString());
+	}
 
 }
