@@ -6,22 +6,33 @@
  */
 package com.ucsc.mcs.sensorservice;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -136,34 +147,6 @@ public class SensorServiceSkeleton {
 		LoginResponseType res = new LoginResponseType();
 		res.setLoginResponseType(isLogin);
 		
-		//-------------------------------------------------------------------------------------------------------------
-		Session session = null;
-		try {
-			Context initCtx = new InitialContext();
-			Context envCtx = (Context) initCtx.lookup("java:comp/env");
-			session = (Session) envCtx.lookup("mail/JavaMail");
-		} catch (Exception ex) {
-			System.out.println("Error occurred while initiating mail context!!!");
-			System.out.println(ex.getMessage());
-		}
-		
-		Message message = new MimeMessage(session);
-		try {
-			message.setFrom(new InternetAddress("thisarattr@gmail.com"));
-			InternetAddress to[] = new InternetAddress[1];
-			to[0] = new InternetAddress("thisarattr@yahoo.com");
-			message.setRecipients(Message.RecipientType.TO, to);
-			message.setSubject("Test mail from my sensor web servivce!!!");
-			message.setContent("This is the message content", "text/html;charset=UTF-8");
-			//Transport.send(message);
-		} catch (AddressException ex) {
-			System.out.println(ex.getMessage());
-		} catch (MessagingException e) {
-			System.out.println(e.getMessage());
-		}
-		
- 
- 		//-------------------------------------------------------------------------------------------------------------
 		return res;
 	}
 	
@@ -381,8 +364,124 @@ public class SensorServiceSkeleton {
 	 */
 
 	public com.ucsc.mcs.sensorservice.EmailDataResponseType EmailData(com.ucsc.mcs.sensorservice.EmailDataRequestType emailDataRequestType) {
-		// TODO : fill this with the necessary business logic
-		throw new java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#EmailData");
+		
+		Connection conn;
+		PreparedStatement prepStmt;
+		ResultSet resultSet;
+		boolean isSuccess=false;
+		
+		String username = emailDataRequestType.getImei();
+		Long jobId = emailDataRequestType.getJobId();
+		
+		
+		String sql = "SELECT d.id, d.datetime,d.latitude,d.longitude,d.reading, tmp.username, tmp.email " +
+				"FROM data d, (SELECT j.id, u.username, u.email FROM job j INNER JOIN user u ON j.user_id=u.id WHERE username=? AND j.id=?) tmp " +
+				"WHERE d.job_id=tmp.id";
+		StringBuffer output = new StringBuffer();
+		
+		try {
+			conn = getMySqlConnection();
+			prepStmt = conn.prepareStatement(sql);
+			prepStmt.setString(1, username);
+			prepStmt.setLong(2, jobId);
+			resultSet = prepStmt.executeQuery();
+			
+			// Prepare email text.
+			String userEmail = null;
+			StringBuffer emailText = new StringBuffer();
+			emailText.append("This mail was sent by Mobile Ad-Hoc Sensor Nwtwork. Attached file contains data for following job," + ROW_DELEMETER + ROW_DELEMETER);
+			emailText.append("Job ID\t\t: " + jobId + ROW_DELEMETER);
+			emailText.append("Username\t: " + username + ROW_DELEMETER);
+			emailText.append("Job Expire\t: " + ROW_DELEMETER); // retrieve the job status updated by the DB trigger.
+			
+			while(resultSet.next()){
+				if (output.length() == 0) {
+					output.append("ID" + DATA_DELEMETER + "Date" + DATA_DELEMETER + "Time" + DATA_DELEMETER + "Latitude" + DATA_DELEMETER
+							+ "Longitude" + DATA_DELEMETER + "Reading" + DATA_DELEMETER + "Username" + ROW_DELEMETER);
+				}
+				output.append(resultSet.getLong("id")+DATA_DELEMETER);
+				output.append(resultSet.getTimestamp("datetime")+DATA_DELEMETER);
+				output.append(resultSet.getDouble("latitude")+DATA_DELEMETER);
+				output.append(resultSet.getDouble("longitude")+DATA_DELEMETER);
+				output.append(resultSet.getDouble("reading")+DATA_DELEMETER);
+				output.append(resultSet.getString("username"));
+				if(!resultSet.isLast()){
+					output.append(ROW_DELEMETER);
+				}
+				if(userEmail==null){
+					userEmail = resultSet.getString("email");
+				}
+			}
+			
+			if(output.toString().isEmpty()){
+				output.append("No records found on the requested job. Job need to be added by the same user to retrieve them.");
+				
+			}else{	//Send mail
+				
+				Session session = null;
+				Context initCtx = new InitialContext();
+				Context envCtx = (Context) initCtx.lookup("java:comp/env");
+				session = (Session) envCtx.lookup("mail/JavaMail");
+				
+				// Create file
+				String filename = username+"_"+jobId+"_"+new Date()+".csv";
+				File file = new File(filename);
+				Writer writer = new BufferedWriter(new FileWriter(file));
+				writer.write(output.toString());
+				writer.close();
+
+				// Mail message
+				MimeMessage msg = new MimeMessage(session);
+				msg.setFrom(new InternetAddress("thisarattr@gmail.com"));
+				InternetAddress to[] = new InternetAddress[1];
+				to[0] = new InternetAddress(userEmail);
+				msg.setRecipients(Message.RecipientType.TO, to);
+				msg.setSubject("Ad-hoc Sensor data for Job ID:"+jobId);
+				msg.setSentDate(new Date());
+
+				// Mail text content
+				MimeBodyPart mailMsgTxt = new MimeBodyPart();
+				mailMsgTxt.setText(emailText.toString());
+
+				// Mail attachment
+				MimeBodyPart mailMsgAttchment = new MimeBodyPart();
+				FileDataSource fds = new FileDataSource(filename);
+				mailMsgAttchment.setDataHandler(new DataHandler(fds));
+				mailMsgAttchment.setFileName(fds.getName());
+
+				// All mail content
+				Multipart mailParts = new MimeMultipart();
+				mailParts.addBodyPart(mailMsgTxt);
+				mailParts.addBodyPart(mailMsgAttchment);
+				msg.setContent(mailParts);
+
+				// send mail
+				Transport.send(msg);
+				isSuccess=true;
+			}
+			
+		} catch (NamingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
+		} catch (IOException e) {
+			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
+			e.printStackTrace();
+		} catch (AddressException e) {
+			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
+			e.printStackTrace();
+		}
+		if(output.toString().isEmpty()){
+			//This is empty because error occurred, Otherwise there will be error message at least.
+			output.append("Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId());
+		}
+		
+		EmailDataResponseType emailDataResponseType = new EmailDataResponseType();
+		emailDataResponseType.setEmailDataResponseType(isSuccess);
+		return emailDataResponseType;
 	}
 
 	/**
