@@ -7,25 +7,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.ucsc.mcs.constants.CommonConstants;
-
-import android.app.DatePickerDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
+
+import com.ucsc.mcs.constants.CommonConstants;
 
 /**
  * @author thisara
@@ -36,9 +33,11 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 	private static final int EDIT_JOB_ID = 1;
 	private static final int VIEW_DATA_ID = 2;
 	private static final int VIEW_JOB_ID = 3;
+	private static final int EMAIL_DATA_ID = 4;
 	private static final String VIEW_JOB = "View Job";
 	private static final String VIEW_DATA = "View Data";
 	private static final String EDIT_JOB = "Edit Job";
+	private static final String EMAIL_DATA = "Email Data";
 	private String username;
 	private ListView listViewJobList;
 	
@@ -125,7 +124,7 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 			menu.add(Menu.NONE, EDIT_JOB_ID, EDIT_JOB_ID, EDIT_JOB);
 			menu.add(Menu.NONE, VIEW_DATA_ID, VIEW_DATA_ID, VIEW_DATA);
 			menu.add(Menu.NONE, VIEW_JOB_ID, VIEW_JOB_ID, VIEW_JOB);
-
+			menu.add(Menu.NONE, EMAIL_DATA_ID, EMAIL_DATA_ID, EMAIL_DATA);
 		}
 	}
 
@@ -142,6 +141,7 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 		// Get the item that was clicked
 		Map<String, String> selectedRec = (Map<String, String>) this.getListAdapter().getItem(info.position);
+		Long jobId = Long.parseLong(selectedRec.get(CommonConstants.VIEWJOB_ID));
 
 		if (menuItemId == EDIT_JOB_ID) {
 
@@ -166,7 +166,18 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 			startActivity(viewJobData);
 			
 		} else if (menuItemId == VIEW_JOB_ID) {
+			
+			//TODO add new activity to just display job data.
 
+		} else if (menuItemId == EMAIL_DATA_ID) {
+
+			ServiceInvoker invoker = new ServiceInvoker();
+			Boolean emailSent = invoker.emailData(jobId, username);
+			if (emailSent) {
+				Toast.makeText(this, "Data for the Job ID: " + jobId + " sent to user mail address.", Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(this, "Failed sending data for Job ID: " + jobId + ".", Toast.LENGTH_LONG).show();
+			}
 		}
 
 		return true;
