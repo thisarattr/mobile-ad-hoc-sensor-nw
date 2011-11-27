@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView android:id="@+id/scrollView1" android:layout_width="match_parent" android:layout_height="match_parent">
+		<TableLayout android:id="@+id/tableLayout2" android:layout_width="match_parent" android:layout_height="match_parent">
+			<LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+				<TextView android:layout_width="wrap_content" android:textSize="24px" android:id="@+id/txtViewAddJob" android:text="View Job" android:layout_marginLeft="10dip" android:layout_height="wrap_content"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout2" android:layout_width="wrap_content" android:layout_marginTop="10dip" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewJobId" android:text="@string/jobId" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewJobIdVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout3" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewSensorType" android:text="@string/jobSensor" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewSensorVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout4" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewLat" android:text="@string/jobLatitude" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewLatVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout5" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_height="wrap_content" android:textSize="16px" android:layout_width="135dip" android:text="@string/jobLongitude" android:id="@+id/txtViewLon" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewLonVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout6" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewLocRange" android:layout_height="wrap_content" android:text="@string/jobLocRange" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewLocRangeVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout7" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewStart" android:text="@string/jobStarttime" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewStartVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout8" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewEnd" android:text="@string/jobEndtime" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewEndVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout9" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:textSize="16px" android:id="@+id/txtViewFreq" android:text="@string/jobFreq" android:layout_height="wrap_content" android:layout_width="135dip" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewFreqVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout10" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewTimePeriod" android:layout_height="wrap_content" android:text="@string/jobTimePeriod" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewTimePeriodVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout11" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:layout_width="135dip" android:textSize="16px" android:id="@+id/txtViewNodes" android:text="@string/jobNodes" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewNodesVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout12" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:id="@+id/txtViewJobStatus" android:layout_width="135dip" android:layout_height="wrap_content" android:textSize="16px" android:text="@string/jobStatus" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewJobStatusVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout13" android:layout_width="wrap_content" android:layout_height="35dip">
+				<TextView android:id="@+id/txtViewDesc" android:layout_width="135dip" android:layout_height="wrap_content" android:textSize="16px" android:text="@string/jobDesc" android:layout_gravity="center_vertical"></TextView>
+				<TextView android:text="" android:textSize="16px" android:id="@+id/txtViewDescVal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+			</LinearLayout>
+			<LinearLayout android:id="@+id/linearLayout14" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="15dip" >
+				<Button android:text="Email Data" android:layout_width="95dip" android:layout_height="wrap_content" android:id="@+id/btnJobEmail" android:layout_marginLeft="10dip"></Button>
+				<Button android:text="View Data" android:layout_width="95dip" android:layout_height="wrap_content" android:id="@+id/btnJobViewData" android:layout_marginLeft="10dip"></Button>
+				<Button android:text="Edit" android:layout_width="95dip" android:layout_height="wrap_content" android:id="@+id/btnJobEdit" android:layout_marginLeft="10dip"></Button>
+			</LinearLayout>
+		</TableLayout>
+	</ScrollView>
+</TableLayout>
