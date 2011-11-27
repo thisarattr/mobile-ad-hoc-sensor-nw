@@ -10,7 +10,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,12 +127,24 @@ public class SensorServiceSkeleton {
 		ResultSet resultSet;
 
 		try {
+			
+			String password = loginRequestType.getPassword();
+			byte[] bytesPassword = password.getBytes("UTF-8");
+
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] passwordDigest = md.digest(bytesPassword);
+			String md5Password = new String(passwordDigest);
+			
 			conn = getMySqlConnection();
-			prepStmt = conn.prepareStatement("select password from user where username='" + loginRequestType.getUsername() + "'");
+			String sql = "select count(*) val from user where username=? and password=?";
+			prepStmt = conn.prepareStatement(sql);
+			prepStmt.setString(1, loginRequestType.getUsername());
+			prepStmt.setString(2, md5Password);
 			resultSet = prepStmt.executeQuery();
+			
 			if (resultSet.next()) {
-				String pw = resultSet.getString("password");
-				if (loginRequestType.getPassword().equals(pw)) {
+				Long count = resultSet.getLong("val");
+				if (count == 1) {
 					isLogin = true;
 				}
 			}
@@ -142,6 +158,10 @@ public class SensorServiceSkeleton {
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while select Login. Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Error occurred while select Login. Original stacktrace: " + e.toString());
+		} catch (UnsupportedEncodingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while select Login. Original stacktrace: " + e.toString());
+		} catch (NoSuchAlgorithmException e) {
 			LOG.log(Level.SEVERE, "Error occurred while select Login. Original stacktrace: " + e.toString());
 		}
 		LoginResponseType res = new LoginResponseType();
@@ -271,7 +291,7 @@ public class SensorServiceSkeleton {
 			 * 
 			 */
 			
-			String sql = "SELECT j.id,j.datetime,j.sensor_id,tempjob.start_time,IF(UNIX_TIMESTAMP(expire_time)=0,ADDTIME(tempjob.start_time,CONCAT(time_period,':00:00')),IF(ADDTIME(tempjob.start_time,CONCAT(time_period,':00:00'))<expire_time,ADDTIME(tempjob.start_time,CONCAT(time_period,':00:00')),expire_time)) expire_time ,j.frequency,j.time_period,j.longitude,j.latitude,j.loc_range,j.user_id " +
+			String sql = "SELECT j.id,j.datetime,j.sensor_id,tempjob.start_time,IF(UNIX_TIMESTAMP(expire_time)=0,ADDTIME(tempjob.start_time,CONCAT(time_period,':00:00')),IF(ADDTIME(tempjob.start_time,CONCAT(time_period,':00:00'))<expire_time,ADDTIME(tempjob.start_time,CONCAT(time_period,':00:00')),expire_time)) expire_time ,j.frequency,j.time_period,j.longitude,j.latitude,j.loc_range,j.user_id,j.status " +
 					"FROM (SELECT IF(UNIX_TIMESTAMP(start_time)=0,now(),IF(start_time<now(),now(),start_time)) start_time,id FROM job) tempjob INNER JOIN job j on j.id=tempjob.id INNER JOIN user u ON j.user_id=u.id " +
 					"WHERE acos(sin(latitude*"+RADIAN+") * sin("+nodeLat*RADIAN+") + cos(latitude*"+RADIAN+") * cos("+nodeLat*RADIAN+") * cos(longitude*"+RADIAN+"-"+nodeLon*RADIAN +")) * 6371 <= loc_range " +
 					"AND j.id NOT IN ("+currJobSet+") AND node_count<nodes AND IF(UNIX_TIMESTAMP(expire_time)=0,true,expire_time>=now()) ORDER BY tempjob.start_time ASC, u.rank DESC";
@@ -293,8 +313,8 @@ public class SensorServiceSkeleton {
 				job.append(resultSet.getDouble("loc_range")+DATA_DELEMETER);
 				job.append(resultSet.getInt("user_id")+DATA_DELEMETER);
 				job.append(resultSet.getTimestamp("start_time").getTime()+DATA_DELEMETER);
-				job.append(resultSet.getTimestamp("expire_time").getTime());
-				//job.append(resultSet.getInt("status"));
+				job.append(resultSet.getTimestamp("expire_time").getTime()+DATA_DELEMETER);
+				job.append(resultSet.getInt("status"));
 				
 				//Increment the node count by to indicate number of nodes processing this job.
 				sql = "UPDATE job SET node_count=node_count+1 WHERE id=?";
@@ -558,10 +578,16 @@ public class SensorServiceSkeleton {
 		String sql = "INSERT INTO user (username,password,fullname,imei,rank,email,datetime) values (?,?,?,?,?,?,now())";
 		
 		try {
+			String password = subscribeRequestType.getPassword();
+			byte[] bytesPassword = password.getBytes("UTF-8");
+
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] passwordDigest = md.digest(bytesPassword);
+			
 			conn = getMySqlConnection();
 			prepStmt=conn.prepareStatement(sql);
 			prepStmt.setString(1, subscribeRequestType.getUsername());
-			prepStmt.setString(2, subscribeRequestType.getPassword());
+			prepStmt.setString(2, new String(passwordDigest));
 			prepStmt.setString(3, subscribeRequestType.getFullname());
 			prepStmt.setString(4, subscribeRequestType.getImei());
 			prepStmt.setInt(5,0);// rank stars with 0 and increments with each upload.
@@ -573,6 +599,10 @@ public class SensorServiceSkeleton {
 			LOG.log(Level.SEVERE, "Error occurred while subscribing nwe user:"+subscribeRequestType.getUsername()+". Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Error occurred while subscribing nwe user:"+subscribeRequestType.getUsername()+". Username already exists. Try another one. Original stacktrace: " + e.toString());
+		} catch (UnsupportedEncodingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while subscribing nwe user:"+subscribeRequestType.getUsername()+". Original stacktrace: " + e.toString());
+		} catch (NoSuchAlgorithmException e) {
+			LOG.log(Level.SEVERE, "Error occurred while subscribing nwe user:"+subscribeRequestType.getUsername()+". Original stacktrace: " + e.toString());
 		}
 		subscribeResponse.setSubscribeResponseType(isSuccess);
 		return subscribeResponse;
@@ -651,7 +681,7 @@ public class SensorServiceSkeleton {
 		ViewJobResponseType viewJobResponse = new ViewJobResponseType();
 		// id, sensor_name, start_time, expire_time, frequency, time_period, latitude, longitude, loc_range, nodes, description, datetime
 		String sql = "SELECT j.id, s.name, UNIX_TIMESTAMP(j.start_time)*1000 start_time, UNIX_TIMESTAMP(j.expire_time)*1000 expire_time, j.frequency, j.time_period, j.latitude, " +
-				"j.longitude, j.loc_range, j.nodes, j.description, UNIX_TIMESTAMP(j.datetime)*1000 datetime " +
+				"j.longitude, j.loc_range, j.nodes, j.description, UNIX_TIMESTAMP(j.datetime)*1000 datetime, j.status " +
 				"FROM job j INNER JOIN user u ON j.user_id=u.id INNER JOIN sensor s ON j.sensor_id=s.id WHERE u.username=?";
 		StringBuffer output = new StringBuffer();
 		
@@ -676,7 +706,8 @@ public class SensorServiceSkeleton {
 				output.append(resultSet.getDouble("loc_range") + DATA_DELEMETER);
 				output.append(resultSet.getInt("nodes") + DATA_DELEMETER);
 				output.append(resultSet.getString("description") + DATA_DELEMETER);
-				output.append(resultSet.getLong("datetime"));
+				output.append(resultSet.getLong("datetime") + DATA_DELEMETER);
+				output.append(resultSet.getLong("status"));
 				if (!resultSet.isLast()) {
 					output.append(ROW_DELEMETER);
 				}
@@ -708,9 +739,146 @@ public class SensorServiceSkeleton {
 
 	public com.ucsc.mcs.sensorservice.PasswordRecoverResponseType PasswordRecover(
 			com.ucsc.mcs.sensorservice.PasswordRecoverRequestType passwordRecoverRequestType) {
-		// TODO : fill this with the necessary business logic
-		throw new java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#PasswordRecover");
+
+		Connection conn;
+		PreparedStatement prepStmt = null;
+		ResultSet resultSet;
+
+		PasswordRecoverResponseType responseType = new PasswordRecoverResponseType();
+		boolean isAcctFound = false;
+
+		String username = passwordRecoverRequestType.getUsername();
+		String email = passwordRecoverRequestType.getEmail();
+		String sql = null;
+
+		try {
+			conn = getMySqlConnection();
+
+			if (username != null && username.length() > 0 && email != null && email.length() > 0) {
+				sql = "SELECT username, fullname, email  FROM user WHERE username=? AND email=?";
+				prepStmt = conn.prepareStatement(sql);
+				prepStmt.setString(1, username);
+				prepStmt.setString(2, email);
+			} else if (username != null && username.length() > 0) {
+				sql = "SELECT username, fullname, email  FROM user WHERE username=?";
+				prepStmt = conn.prepareStatement(sql);
+				prepStmt.setString(1, username);
+			} else if (email != null && email.length() > 0) {
+				sql = "SELECT username, fullname, email  FROM user WHERE email=?";
+				prepStmt = conn.prepareStatement(sql);
+				prepStmt.setString(1, email);
+			}
+
+			if (prepStmt != null) {
+				resultSet = prepStmt.executeQuery();
+				if (resultSet.getFetchSize() == 1) {
+					if (resultSet.first()) {
+						String usernameVal = resultSet.getString("username");
+						String fullnameVal = resultSet.getString("fullname");
+						String emailVal = resultSet.getString("email");
+						String password = generatePassword();
+						
+						//MD5 password digest.
+						byte[] bytesPassword = password.getBytes("UTF-8");
+						MessageDigest md = MessageDigest.getInstance("MD5");
+						byte[] passwordDigest = md.digest(bytesPassword);
+						String md5Password = new String(passwordDigest);
+
+						StringBuffer emailTxt = new StringBuffer();
+						emailTxt.append("Dear ").append(fullnameVal).append(",\n\n\n");
+						emailTxt.append("You have requested to reset your password for the Ad-hoc Sensor Network profile. And your new password is as follows, \n\n");
+						emailTxt.append("\tNew Password : '").append(password).append("'\n\n");
+						emailTxt.append("You can log into the system using this new password, but please change this password after first time you logged in.\n\n");
+						emailTxt.append("Ad-hoc Sensor Network Team.");
+						sendEmail(emailTxt.toString(), "Ad-hoc Sensor NW password reset", emailVal);
+						
+						sql = "UPDATE user set password=? WHERE username=?";
+						prepStmt = conn.prepareStatement(sql);
+						prepStmt.setString(1, md5Password);
+						prepStmt.setString(2, usernameVal);
+						prepStmt.executeUpdate();
+						isAcctFound = true;
+
+					}
+				}
+			}
+
+		} catch (NamingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while password Reset operation. Original stacktrace: " + e.toString());
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Error occurred while password Reset operation. Original stacktrace: " + e.toString());
+		} catch (UnsupportedEncodingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while password Reset operation. Original stacktrace: " + e.toString());
+		} catch (NoSuchAlgorithmException e) {
+			LOG.log(Level.SEVERE, "Error occurred while password Reset operation. Original stacktrace: " + e.toString());
+		}
+
+		responseType.setPasswordRecoverResponseType(isAcctFound);
+		return responseType;
 	}
+	
+	/**
+	 * @return
+	 */
+	private String generatePassword() {
+
+		Random rng = new Random();
+		String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		int length = 8;
+
+		char[] text = new char[length];
+		for (int i = 0; i < length; i++) {
+			text[i] = characters.charAt(rng.nextInt(characters.length()));
+		}
+		return new String(text);
+	}
+	
+	/**
+	 * @param msgTxt
+	 * @param subject
+	 * @param toAddress
+	 */
+	private void sendEmail(String msgTxt, String subject, String toAddress) {
+		
+		try {
+			
+			Session session = null;
+			Context initCtx;
+			initCtx = new InitialContext();
+
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			session = (Session) envCtx.lookup("mail/JavaMail");
+
+			// Mail message
+			MimeMessage msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress("thisarattr@gmail.com"));
+			InternetAddress to[] = new InternetAddress[1];
+			to[0] = new InternetAddress(toAddress);
+			msg.setRecipients(Message.RecipientType.TO, to);
+			msg.setSubject(subject);
+			msg.setSentDate(new Date());
+
+			// Mail text content
+			MimeBodyPart mailMsgTxt = new MimeBodyPart();
+			mailMsgTxt.setText(msgTxt);
+
+			// All mail content
+			Multipart mailParts = new MimeMultipart();
+			mailParts.addBodyPart(mailMsgTxt);
+			msg.setContent(mailParts);
+
+			// send mail
+			Transport.send(msg);
+
+		} catch (NamingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while sending email. Original stacktrace: " + e.toString());
+		} catch (AddressException e) {
+			LOG.log(Level.SEVERE, "Error occurred while sending email. Original stacktrace: " + e.toString());
+		} catch (MessagingException e) {
+			LOG.log(Level.SEVERE, "Error occurred while sending email. Original stacktrace: " + e.toString());
+		}
+	}
+
 
 	/**
 	 * Auto generated method signature
