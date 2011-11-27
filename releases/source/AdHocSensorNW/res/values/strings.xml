@@ -10,6 +10,7 @@
     <string name="titleManuPrefs">Preferences</string>
     <string name="titleServiceStart">Start Service</string>
     <string name="titleServiceStop">Stop Service</string>
+    <string name="jobId">Job ID</string>
     <string name="jobSensor">Sensor Type</string>
     <string name="jobLatitude">Latitude</string>
     <string name="jobLongitude">Longitude</string>
@@ -19,5 +20,6 @@
     <string name="jobFreq">Frequency (min)</string>
     <string name="jobTimePeriod">Time Period (hr)</string>
     <string name="jobNodes">Nodes</string>
+    <string name="jobStatus">Job Status</string>
     <string name="jobDesc">Description</string>
 </resources>
