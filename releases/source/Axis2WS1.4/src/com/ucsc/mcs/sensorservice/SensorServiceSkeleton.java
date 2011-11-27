@@ -771,35 +771,35 @@ public class SensorServiceSkeleton {
 
 			if (prepStmt != null) {
 				resultSet = prepStmt.executeQuery();
-				if (resultSet.getFetchSize() == 1) {
-					if (resultSet.first()) {
-						String usernameVal = resultSet.getString("username");
-						String fullnameVal = resultSet.getString("fullname");
-						String emailVal = resultSet.getString("email");
-						String password = generatePassword();
-						
-						//MD5 password digest.
-						byte[] bytesPassword = password.getBytes("UTF-8");
-						MessageDigest md = MessageDigest.getInstance("MD5");
-						byte[] passwordDigest = md.digest(bytesPassword);
-						String md5Password = new String(passwordDigest);
+				if (resultSet.first() && resultSet.isLast()) {
+					String usernameVal = resultSet.getString("username");
+					String fullnameVal = resultSet.getString("fullname");
+					String emailVal = resultSet.getString("email");
+					String password = generatePassword();
 
-						StringBuffer emailTxt = new StringBuffer();
-						emailTxt.append("Dear ").append(fullnameVal).append(",\n\n\n");
-						emailTxt.append("You have requested to reset your password for the Ad-hoc Sensor Network profile. And your new password is as follows, \n\n");
-						emailTxt.append("\tNew Password : '").append(password).append("'\n\n");
-						emailTxt.append("You can log into the system using this new password, but please change this password after first time you logged in.\n\n");
-						emailTxt.append("Ad-hoc Sensor Network Team.");
-						sendEmail(emailTxt.toString(), "Ad-hoc Sensor NW password reset", emailVal);
-						
-						sql = "UPDATE user set password=? WHERE username=?";
-						prepStmt = conn.prepareStatement(sql);
-						prepStmt.setString(1, md5Password);
-						prepStmt.setString(2, usernameVal);
-						prepStmt.executeUpdate();
-						isAcctFound = true;
+					// MD5 password digest.
+					byte[] bytesPassword = password.getBytes("UTF-8");
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					byte[] passwordDigest = md.digest(bytesPassword);
+					String md5Password = new String(passwordDigest);
 
-					}
+					StringBuffer emailTxt = new StringBuffer();
+					emailTxt.append("Dear ").append(fullnameVal).append(",\n\n\n");
+					emailTxt
+							.append("You have requested to reset your password for the Ad-hoc Sensor Network profile. And your new password is as follows, \n\n");
+					emailTxt.append("\tNew Password : ").append(password).append("\n\n");
+					emailTxt
+							.append("You can log into the system using this new password, but please change this password after first time you logged in.\n\n");
+					emailTxt.append("Ad-hoc Sensor Network Team.");
+					sendEmail(emailTxt.toString(), "Ad-hoc Sensor NW password reset", emailVal);
+
+					sql = "UPDATE user set password=? WHERE username=?";
+					prepStmt = conn.prepareStatement(sql);
+					prepStmt.setString(1, md5Password);
+					prepStmt.setString(2, usernameVal);
+					prepStmt.executeUpdate();
+					isAcctFound = true;
+
 				}
 			}
 
