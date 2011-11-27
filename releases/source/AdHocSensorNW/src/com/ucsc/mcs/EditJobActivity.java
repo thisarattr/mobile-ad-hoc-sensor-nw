@@ -56,11 +56,11 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.editjob);
 		
-		Bundle b = getIntent().getExtras();
+		Bundle bundle = getIntent().getExtras();
 		
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		imei = telephonyManager.getDeviceId();
@@ -101,7 +101,7 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		spinSensorType.setEnabled(false);
 
 		final Calendar startDate = Calendar.getInstance();
-		long starttimeMillis = Long.parseLong((String)b.get(CommonConstants.VIEWJOB_STARTTIME));
+		long starttimeMillis = Long.parseLong((String)bundle.get(CommonConstants.VIEWJOB_STARTTIME));
 		if(starttimeMillis!=0){
 			startDate.setTimeInMillis(starttimeMillis);
 		}else{
@@ -114,7 +114,7 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		startMinute = startDate.get(Calendar.MINUTE);
 		
 		final Calendar endDate = Calendar.getInstance();
-		long endtimeMillis = Long.parseLong((String)b.get(CommonConstants.VIEWJOB_EXPIRETIME));
+		long endtimeMillis = Long.parseLong((String)bundle.get(CommonConstants.VIEWJOB_EXPIRETIME));
 		if(endtimeMillis!=0){
 			endDate.setTimeInMillis(endtimeMillis);
 		}else{
@@ -135,17 +135,17 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		btnEndDate.setText(formatEndDate);
 		btnEndTime.setText(formatEndTime);
 		
-		editTxtLatitude.setText((String)b.get(CommonConstants.VIEWJOB_LAT));
-		editTxtLongitude.setText((String)b.get(CommonConstants.VIEWJOB_LONG));
-		editTxtLocRange.setText((String)b.get(CommonConstants.VIEWJOB_LOCRANGE));
-		editTxtFreq.setText((String)b.get(CommonConstants.VIEWJOB_FREQ));
-		editTxtTimePeriod.setText((String)b.get(CommonConstants.VIEWJOB_TIMEPERIOD));
-		editTxtNodes.setText((String)b.get(CommonConstants.VIEWJOB_NODES));
-		String desc = (String) b.get(CommonConstants.VIEWJOB_DESC);
+		editTxtLatitude.setText((String)bundle.get(CommonConstants.VIEWJOB_LAT));
+		editTxtLongitude.setText((String)bundle.get(CommonConstants.VIEWJOB_LONG));
+		editTxtLocRange.setText((String)bundle.get(CommonConstants.VIEWJOB_LOCRANGE));
+		editTxtFreq.setText((String)bundle.get(CommonConstants.VIEWJOB_FREQ));
+		editTxtTimePeriod.setText((String)bundle.get(CommonConstants.VIEWJOB_TIMEPERIOD));
+		editTxtNodes.setText((String)bundle.get(CommonConstants.VIEWJOB_NODES));
+		String desc = (String) bundle.get(CommonConstants.VIEWJOB_DESC);
 		if (!desc.equalsIgnoreCase("null")) {
 			editTxtDesc.setText(desc);
 		}
-		jobId = Long.parseLong((String)b.get(CommonConstants.VIEWJOB_ID));
+		jobId = Long.parseLong((String)bundle.get(CommonConstants.VIEWJOB_ID));
 		
 		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
 		username = settings.getString(CommonConstants.USERNAME, "");

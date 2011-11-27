@@ -11,10 +11,10 @@ public class WebServiceConstants {
 
 	public static final String NAMESPACE = "http://mcs.ucsc.com/SensorService/";
 	public static final String URL = "http://192.168.1.110:8090/Axis2WS1.4/services/SensorService";
-	//public static final String URL = "http://192.168.1.110:8090/SensorService/services/SensorService";
-	//public static final String URL = "http://192.168.43.28:8090/Axis2WS1.4/services/SensorService";
 	//public static final String URL = "http://www.mobilesensornw.hostjava.net/Axis2WS1.4/services/SensorService";
+	//public static final String URL = "http://192.168.43.28:8090/Axis2WS1.4/services/SensorService";
 	//public static final String URL = "https://192.168.1.110:8443/Axis2WS1.4/services/SensorService";
+	
 	
 	public static final String SOAP_ACTION = "http://mcs.ucsc.com/SensorService/GetMessage";
 	public static final String METHOD_NAME = "input";
