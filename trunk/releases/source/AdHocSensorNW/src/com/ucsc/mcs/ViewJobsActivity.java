@@ -86,9 +86,11 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 		for (Entry<String, String> element : selectedRec.entrySet()) {
 			bundle.putString(element.getKey(), element.getValue());
 		}
-		Intent editJob = new Intent(this, EditJobActivity.class);
-		editJob.putExtras(bundle);
-		startActivity(editJob);
+		//Intent editJob = new Intent(this, EditJobActivity.class);
+		//editJob.putExtras(bundle);
+		Intent job = new Intent(this, JobActivity.class);
+		job.putExtras(bundle);
+		startActivity(job);
 
 		Toast.makeText(this, "You selected: " + selectedRec.get(CommonConstants.VIEWJOB_DATATIME)+"  "+selectedRec.get(CommonConstants.VIEWJOB_SENSORNAME), Toast.LENGTH_LONG).show();
 	}
@@ -142,13 +144,14 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 		// Get the item that was clicked
 		Map<String, String> selectedRec = (Map<String, String>) this.getListAdapter().getItem(info.position);
 		Long jobId = Long.parseLong(selectedRec.get(CommonConstants.VIEWJOB_ID));
+		
+		Bundle bundle = new Bundle();
+		for (Entry<String, String> element : selectedRec.entrySet()) {
+			bundle.putString(element.getKey(), element.getValue());
+		}
 
 		if (menuItemId == EDIT_JOB_ID) {
 
-			Bundle bundle = new Bundle();
-			for (Entry<String, String> element : selectedRec.entrySet()) {
-				bundle.putString(element.getKey(), element.getValue());
-			}
 			Intent editJob = new Intent(this, EditJobActivity.class);
 			editJob.putExtras(bundle);
 			startActivity(editJob);
@@ -157,17 +160,15 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 
 		} else if (menuItemId == VIEW_DATA_ID) {
 
-			Bundle bundle = new Bundle();
-			for (Entry<String, String> element : selectedRec.entrySet()) {
-				bundle.putString(element.getKey(), element.getValue());
-			}
 			Intent viewJobData = new Intent(this, ViewDataActivity.class);
 			viewJobData.putExtras(bundle);
 			startActivity(viewJobData);
 			
 		} else if (menuItemId == VIEW_JOB_ID) {
 			
-			//TODO add new activity to just display job data.
+			Intent job = new Intent(this, JobActivity.class);
+			job.putExtras(bundle);
+			startActivity(job);
 
 		} else if (menuItemId == EMAIL_DATA_ID) {
 

@@ -387,6 +387,7 @@ public class ServiceInvoker {
 				dataMap.put(CommonConstants.VIEWJOB_NODES, dataArray[9]);
 				dataMap.put(CommonConstants.VIEWJOB_DESC, dataArray[10]);
 				dataMap.put(CommonConstants.VIEWJOB_DATATIME, new Timestamp(Long.parseLong(dataArray[11])).toString());
+				dataMap.put(CommonConstants.VIEWJOB_STATUS, dataArray[12]);
 				jobList.add(dataMap);
 			}
 		}else{

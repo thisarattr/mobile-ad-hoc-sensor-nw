@@ -3,6 +3,8 @@
  */
 package com.ucsc.mcs.constants;
 
+import android.R.integer;
+
 /**
  * @author thisara
  *
@@ -38,6 +40,7 @@ public class CommonConstants {
 	public static final String VIEWJOB_NODES = "nodes";
 	public static final String VIEWJOB_DESC = "description";
 	public static final String VIEWJOB_DATATIME = "datetime";
+	public static final String VIEWJOB_STATUS = "status";
 	
 	
 	public static final String VIEWDATA_ID = "id";
@@ -46,4 +49,8 @@ public class CommonConstants {
 	public static final String VIEWDATA_LONG = "longitude";
 	public static final String VIEWDATA_READING = "reading";
 	public static final String VIEWDATA_USER = "username";
+	
+	public static final int JOB_STATUS_RUNNING = 1;
+	public static final int JOB_STATUS_COMPLETED = 2;
+	public static final int JOB_STATUS_EXPIRED = 3;
 }
