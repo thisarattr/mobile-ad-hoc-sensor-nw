@@ -19,7 +19,9 @@
 		<activity android:name=".EditJobActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
 		<activity android:name=".ViewDataActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
 		<activity android:name=".JobActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
-
+		<activity android:name=".PasswordRecoverActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
+		<activity android:name=".UpdateProfileActivity" android:screenOrientation="sensor" android:label="@string/app_name"></activity>
+		
 		<service android:name=".RecorderService" />
 	</application>
 
