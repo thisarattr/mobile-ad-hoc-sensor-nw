@@ -128,7 +128,7 @@ public class SensorServiceSkeleton {
 
 		try {
 			
-			String password = loginRequestType.getPassword();
+			String password = loginRequestType.getPassword().trim();
 			byte[] bytesPassword = password.getBytes("UTF-8");
 
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -138,7 +138,7 @@ public class SensorServiceSkeleton {
 			conn = getMySqlConnection();
 			String sql = "select count(*) val from user where username=? and password=?";
 			prepStmt = conn.prepareStatement(sql);
-			prepStmt.setString(1, loginRequestType.getUsername());
+			prepStmt.setString(1, loginRequestType.getUsername().trim());
 			prepStmt.setString(2, md5Password);
 			resultSet = prepStmt.executeQuery();
 			
@@ -747,8 +747,8 @@ public class SensorServiceSkeleton {
 		PasswordRecoverResponseType responseType = new PasswordRecoverResponseType();
 		boolean isAcctFound = false;
 
-		String username = passwordRecoverRequestType.getUsername();
-		String email = passwordRecoverRequestType.getEmail();
+		String username = passwordRecoverRequestType.getUsername().trim();
+		String email = passwordRecoverRequestType.getEmail().trim();
 		String sql = null;
 
 		try {
@@ -797,7 +797,7 @@ public class SensorServiceSkeleton {
 					prepStmt = conn.prepareStatement(sql);
 					prepStmt.setString(1, md5Password);
 					prepStmt.setString(2, usernameVal);
-					prepStmt.executeUpdate();
+					//TODO prepStmt.executeUpdate(); 
 					isAcctFound = true;
 
 				}
