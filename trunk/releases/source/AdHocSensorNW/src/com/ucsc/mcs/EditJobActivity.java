@@ -147,7 +147,8 @@ public class EditJobActivity extends Activity implements OnClickListener, OnChec
 		}
 		jobId = Long.parseLong((String)bundle.get(CommonConstants.VIEWJOB_ID));
 		
-		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		// Retrieve application session data.
+		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
 		username = settings.getString(CommonConstants.USERNAME, "");
 		
 	}

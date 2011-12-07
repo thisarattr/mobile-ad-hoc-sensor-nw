@@ -3,7 +3,6 @@
  */
 package com.ucsc.mcs.constants;
 
-import android.R.integer;
 
 /**
  * @author thisara
@@ -23,9 +22,11 @@ public class CommonConstants {
 	public static final int SIGNUP_REQ_ID = 4;
 	public static final int LOGIN_REQ_ID = 5;
 	public static final int VIEW_JOB_REQ_ID = 6;
+	public static final int PW_RESET_REQ_ID = 7;
 	
-	public static String USERNAME="username";
-	public static String PASSWORD="password";
+	public static String USERNAME = "username";
+	public static String PASSWORD = "password";
+	public static String PREF_USER_DETAILS = "UserDetails";
 	
 	
 	public static final String VIEWJOB_ID = "id";

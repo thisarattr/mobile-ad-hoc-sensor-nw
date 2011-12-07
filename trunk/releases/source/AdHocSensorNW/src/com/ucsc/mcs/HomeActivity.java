@@ -22,13 +22,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeActivity extends Activity implements OnSharedPreferenceChangeListener, OnClickListener {
 
 	private static final String TAG = HomeActivity.class.getSimpleName();
 
-	private TextView txtReadingValue, txtXVal, txtYVal, txtZVal, txtSensors, txtBtnClicked, txtGpsLbl, txtGpsVal, txtGpsDisable;
-	private Button btnViewData, btnViewJob, btnAddJob, btnSync, btnGpsEnable;
+	private TextView txtReadingValue, txtXVal, txtYVal, txtZVal, txtSensors, txtGpsLbl, txtGpsVal, txtGpsDisable;
+	private Button btnProfile, btnViewJob, btnAddJob, btnSync, btnGpsEnable;
 
 	private SensorManager mSensorManager;
 	private Sensor mMagnetometer;
@@ -48,10 +49,12 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		// Initialize shared preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		prefs.registerOnSharedPreferenceChangeListener(this);
+		//PreferenceManager.setDefaultValues(this, CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE, R.xml.prefs, true);
+		
 		// Access saved preferences
 		String uname = prefs.getString("username", "");
 		//Access custom preferences
-		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
 		String username = settings.getString(CommonConstants.USERNAME, "");
 		String password = settings.getString(CommonConstants.PASSWORD, "");
 
@@ -61,17 +64,16 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		txtYVal = (TextView) findViewById(R.id.txtViewYVal);
 		txtZVal = (TextView) findViewById(R.id.txtViewZVal);
 		txtSensors = (TextView) findViewById(R.id.txtViewSensors);
-		txtBtnClicked = (TextView) findViewById(R.id.txtViewBtnClicked);
 		txtGpsLbl = (TextView) findViewById(R.id.txtViewGpsLocLbl);
 		txtGpsVal = (TextView) findViewById(R.id.txtViewGpsVal);
 		txtGpsDisable = (TextView) findViewById(R.id.txtViewGpsDisable);
 		
-		btnViewData = (Button) findViewById(R.id.btnViewData);
+		btnProfile = (Button) findViewById(R.id.btnProfile);
 		btnSync =  (Button) findViewById(R.id.btnSync);
 		btnAddJob =  (Button) findViewById(R.id.btnAddJob);
 		btnViewJob =  (Button) findViewById(R.id.btnViewJob);
 		btnGpsEnable =  (Button) findViewById(R.id.btnGpsEnable);
-		btnViewData.setOnClickListener(this);
+		btnProfile.setOnClickListener(this);
 		btnSync.setOnClickListener(this);
 		btnAddJob.setOnClickListener(this);
 		btnViewJob.setOnClickListener(this);
@@ -116,17 +118,26 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	protected void onResume() {
 		super.onResume();
 		mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
 	protected void onPause() {
 		super.onPause();
 		mSensorManager.unregisterListener(mSensorListener);
 		// mlocManager.removeUpdates(mlocListener);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -136,6 +147,9 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -154,17 +168,28 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.content.SharedPreferences.OnSharedPreferenceChangeListener#onSharedPreferenceChanged(android.content.SharedPreferences, java.lang.String)
+	 */
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		// TODO Auto-generated method stub
+		
+		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString(key, sharedPreferences.getString(key, ""));
+		editor.commit();
+		
+		Toast.makeText(HomeActivity.this, "Shared Preferences "+key+" changed!", Toast.LENGTH_LONG).show();
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	public void onClick(View v) {
 
-		if (v.getId() == R.id.btnViewData) {
-			Intent viewAllData = new Intent(v.getContext(), ServiceCallTestActivity.class);
-			startActivityForResult(viewAllData, CommonConstants.VIEW_DATA_REQ_ID);
-			txtBtnClicked.setText("Button Clicked!!!");
+		if (v.getId() == R.id.btnProfile) {
+			//Intent viewAllData = new Intent(v.getContext(), ServiceCallTestActivity.class);
+			//startActivityForResult(viewAllData, CommonConstants.VIEW_DATA_REQ_ID);
 			
 		}else if(v.getId() == R.id.btnGpsEnable){
 			Intent gspSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -179,7 +204,8 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 			startActivityForResult(viewJob, CommonConstants.VIEW_JOB_REQ_ID);
 			
 		}else if(v.getId() == R.id.btnSync){
-			///ServiceInvoker.sy
+			Intent pwReset = new Intent(v.getContext(), PasswordRecoverActivity.class);
+			startActivityForResult(pwReset, CommonConstants.PW_RESET_REQ_ID);
 		}
 
 	}
