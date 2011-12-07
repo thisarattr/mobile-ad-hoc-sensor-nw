@@ -397,6 +397,22 @@ public class ServiceInvoker {
 		return jobList;
 	}
 	
+	/**
+	 * @param sensorId
+	 * @param latitude
+	 * @param longitude
+	 * @param locRange
+	 * @param starttime
+	 * @param endtime
+	 * @param frequency
+	 * @param timePeriod
+	 * @param nodes
+	 * @param imei
+	 * @param description
+	 * @param jobId
+	 * @param username
+	 * @return
+	 */
 	public boolean editJob(final int sensorId, final float latitude, final float longitude, final float locRange, final long starttime,
 			final long endtime, final int frequency, final int timePeriod, final int nodes, final String imei, final String description, final long jobId, final String username){
 		
@@ -532,6 +548,43 @@ public class ServiceInvoker {
 
 		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
 		return Boolean.parseBoolean(sp.toString());
+	}
+	
+	/**
+	 * @param username
+	 * @param email
+	 * @param imei
+	 * @return
+	 */
+	public Boolean passwordRecover(final String username, final String email, final String imei){
+		
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_PASSWORD_RECOVER);
+		request.addProperty("username", username);
+		request.addProperty("email", email);
+		request.addProperty("imei", imei);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		// For float marshaling. This is needed if u r using types that are not
+		// defined on PropertyInfo class.
+		Marshal floatMarshal = new MarshalFloat();
+		floatMarshal.register(envelope);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_PASSWORD_RECOVER, envelope);
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when recover password for user: " + username + " : "+email+ ". Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when recover password for user: " + username + " : "+email+ ". Original Error:" + e.toString());
+		}
+
+		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+		return Boolean.parseBoolean(sp.toString());
+
 	}
 
 }

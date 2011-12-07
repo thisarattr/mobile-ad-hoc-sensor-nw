@@ -104,7 +104,8 @@ public class JobActivity extends Activity implements OnClickListener{
 
 		Long jobId = Long.parseLong((String) bundle.get(CommonConstants.VIEWJOB_ID));
 
-		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		// Retrieve application session data.
+		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
 		String username = settings.getString(CommonConstants.USERNAME, "");
 
 		if (v.getId() == R.id.btnJobEdit) {

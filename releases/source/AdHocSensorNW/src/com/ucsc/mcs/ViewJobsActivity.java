@@ -53,7 +53,8 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 		ServiceInvoker serviceInvoker = new ServiceInvoker();
 		List<Map<String, String>> jobList = null;
 		
-		SharedPreferences settings = getSharedPreferences("UserDetails", MODE_PRIVATE);
+		// Retrieve application session data.
+		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
 		username = settings.getString(CommonConstants.USERNAME, "");
 		
 		try {
