@@ -26,7 +26,7 @@
 </LinearLayout>
 <LinearLayout android:id="@+id/linearLayout6" android:layout_height="wrap_content" android:layout_width="match_parent">
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="16px" android:text="GPS Disable please enable." android:visibility="invisible" android:id="@+id/txtViewGpsDisable"></TextView>
-    <Button android:layout_width="wrap_content" android:id="@+id/btnGpsEnable" android:text="GPS On" android:textSize="16px" android:layout_height="30dip" android:visibility="invisible"></Button>
+    <Button android:layout_width="wrap_content" android:id="@+id/btnGpsEnable" android:text="GPS On" android:textSize="16px" android:layout_height="35dip" android:visibility="invisible"></Button>
 </LinearLayout>
 <TableLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/tableLayout1" android:layout_marginTop="30px">
     <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
@@ -37,12 +37,11 @@
     </TableRow>
 </TableLayout>
 <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout3" android:layout_marginTop="20px">
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnViewData" android:text="View Data"></Button>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnAddJob" android:text="Add Job"></Button>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnViewJob" android:text="View Job"></Button>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnSync" android:text="Sync"></Button>
+    <Button android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnProfile" android:text="Profile"></Button>
+    <Button android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnAddJob" android:text="Add Job"></Button>
+    <Button android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnViewJob" android:text="View Job"></Button>
+    <Button android:layout_width="80dip" android:layout_height="wrap_content" android:id="@+id/btnSync" android:text="Sync"></Button>
 </LinearLayout>
 <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout4">
-    <TextView android:text="TextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/txtViewBtnClicked"></TextView>
 </LinearLayout>
 </LinearLayout>

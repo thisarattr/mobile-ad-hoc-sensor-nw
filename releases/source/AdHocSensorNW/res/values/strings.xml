@@ -4,6 +4,7 @@
     <string name="app_name">Ad-Hoc Sensor NW</string>
     <string name="titleUsername">Username</string>
     <string name="titlePassword">Password</string>
+    <string name="titleEmail">Email</string>
     <string name="summaryUsername">Please enter your username</string>
     <string name="summaryPassword">Please enter your password</string>
     <string name="titleUrl">URL</string>
@@ -22,4 +23,5 @@
     <string name="jobNodes">Nodes</string>
     <string name="jobStatus">Job Status</string>
     <string name="jobDesc">Description</string>
+    <string name="pwResetTxt">Please use either your username to email address to reset password.</string>
 </resources>
