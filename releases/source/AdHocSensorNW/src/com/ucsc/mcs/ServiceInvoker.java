@@ -586,5 +586,101 @@ public class ServiceInvoker {
 		return Boolean.parseBoolean(sp.toString());
 
 	}
+	
+	/**
+	 * @param username
+	 * @param oldPassword
+	 * @param newPassword
+	 * @param imei
+	 * @param email
+	 * @param fullname
+	 * @return
+	 */
+	public Boolean editUser(String username, String oldPassword, String newPassword, String imei, String email, String fullname){
+		
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_EDIT_USER);
+		request.addProperty("username", username);
+		request.addProperty("oldPassword", oldPassword);
+		request.addProperty("newPassword", newPassword);
+		request.addProperty("imei", imei);
+		request.addProperty("email", email);
+		request.addProperty("fullname", fullname);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		// For float marshaling. This is needed if u r using types that are not
+		// defined on PropertyInfo class.
+		Marshal floatMarshal = new MarshalFloat();
+		floatMarshal.register(envelope);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_EDIT_USER, envelope);
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when Updating user: " + username + " : "+email+ ". Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when Updating user: " + username + " : "+email+ ". Original Error:" + e.toString());
+		}
+
+		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+		return Boolean.parseBoolean(sp.toString());
+	}
+	
+	
+	/**
+	 * @param username
+	 * @return
+	 */
+	public Map<String, String> getUser(String username) {
+
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_GET_USER);
+		request.addProperty("username", username);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		// For float marshaling. This is needed if u r using types that are not
+		// defined on PropertyInfo class.
+		Marshal floatMarshal = new MarshalFloat();
+		floatMarshal.register(envelope);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_GET_USER, envelope);
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when invoking Get User information for: " + username + ". Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when invoking Get User information for: " + username + ". Original Error:" + e.toString());
+		}
+
+		SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+		String user = sp.toString();
+
+		Map<String, String> userInfoMap = null;
+
+		// Data order: id,username,fullname,email,rank,datatime
+		if (user != null && user.length() > 0 && !user.contains("Error")) {
+
+			String[] dataArray = user.split(CommonConstants.DATA_DELEMETER);
+			userInfoMap = new HashMap<String, String>();
+
+			userInfoMap.put(CommonConstants.GETUSER_ID, dataArray[0]);
+			userInfoMap.put(CommonConstants.GETUSER_USERNAME, dataArray[1]);
+			userInfoMap.put(CommonConstants.GETUSER_FULLNAME, dataArray[2]);
+			userInfoMap.put(CommonConstants.GETUSER_EMAIL, dataArray[3]);
+			userInfoMap.put(CommonConstants.GETUSER_RANK, dataArray[4]);
+			userInfoMap.put(CommonConstants.GETUSER_TIMESTAMP, new Timestamp(Long.parseLong(dataArray[5])).toString());
+
+		} else {
+			throw new RuntimeException(user);
+		}
+
+		return userInfoMap;
+	}
 
 }
