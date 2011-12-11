@@ -29,13 +29,17 @@
             <actionMapping>http://mcs.ucsc.com/SensorService/Subscribe</actionMapping>
             <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/SubscribeResponse</outputActionMapping>
         </operation>
-        <operation name="Login" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
-            <actionMapping>http://mcs.ucsc.com/SensorService/Login</actionMapping>
-            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/LoginResponse</outputActionMapping>
+        <operation name="GetUser" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/GetUser</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/GetUserResponse</outputActionMapping>
         </operation>
         <operation name="EditUser" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
             <actionMapping>http://mcs.ucsc.com/SensorService/EditUser</actionMapping>
             <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/EditUserResponse</outputActionMapping>
+        </operation>
+        <operation name="Login" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
+            <actionMapping>http://mcs.ucsc.com/SensorService/Login</actionMapping>
+            <outputActionMapping>http://mcs.ucsc.com/SensorService/SensorService/LoginResponse</outputActionMapping>
         </operation>
         <operation name="EditJob" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://mcs.ucsc.com/SensorService/">
             <actionMapping>http://mcs.ucsc.com/SensorService/EditJob</actionMapping>

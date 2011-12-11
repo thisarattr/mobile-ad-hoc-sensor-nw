@@ -63,30 +63,60 @@
                             
 
                         /**
-                        * field for Password
+                        * field for OldPassword
                         */
 
                         
-                                    protected java.lang.String localPassword ;
+                                    protected java.lang.String localOldPassword ;
                                 
 
                            /**
                            * Auto generated getter method
                            * @return java.lang.String
                            */
-                           public  java.lang.String getPassword(){
-                               return localPassword;
+                           public  java.lang.String getOldPassword(){
+                               return localOldPassword;
                            }
 
                            
                         
                             /**
                                * Auto generated setter method
-                               * @param param Password
+                               * @param param OldPassword
                                */
-                               public void setPassword(java.lang.String param){
+                               public void setOldPassword(java.lang.String param){
                             
-                                            this.localPassword=param;
+                                            this.localOldPassword=param;
+                                    
+
+                               }
+                            
+
+                        /**
+                        * field for NewPassword
+                        */
+
+                        
+                                    protected java.lang.String localNewPassword ;
+                                
+
+                           /**
+                           * Auto generated getter method
+                           * @return java.lang.String
+                           */
+                           public  java.lang.String getNewPassword(){
+                               return localNewPassword;
+                           }
+
+                           
+                        
+                            /**
+                               * Auto generated setter method
+                               * @param param NewPassword
+                               */
+                               public void setNewPassword(java.lang.String param){
+                            
+                                            this.localNewPassword=param;
                                     
 
                                }
@@ -320,28 +350,62 @@
                                         if (prefix == null) {
                                             prefix = generatePrefix(namespace);
 
-                                            xmlWriter.writeStartElement(prefix,"password", namespace);
+                                            xmlWriter.writeStartElement(prefix,"oldPassword", namespace);
                                             xmlWriter.writeNamespace(prefix, namespace);
                                             xmlWriter.setPrefix(prefix, namespace);
 
                                         } else {
-                                            xmlWriter.writeStartElement(namespace,"password");
+                                            xmlWriter.writeStartElement(namespace,"oldPassword");
                                         }
 
                                     } else {
-                                        xmlWriter.writeStartElement("password");
+                                        xmlWriter.writeStartElement("oldPassword");
                                     }
                                 
 
-                                          if (localPassword==null){
+                                          if (localOldPassword==null){
                                               // write the nil attribute
                                               
-                                                     throw new org.apache.axis2.databinding.ADBException("password cannot be null!!");
+                                                     throw new org.apache.axis2.databinding.ADBException("oldPassword cannot be null!!");
                                                   
                                           }else{
 
                                         
-                                                   xmlWriter.writeCharacters(localPassword);
+                                                   xmlWriter.writeCharacters(localOldPassword);
+                                            
+                                          }
+                                    
+                                   xmlWriter.writeEndElement();
+                             
+                                    namespace = "";
+                                    if (! namespace.equals("")) {
+                                        prefix = xmlWriter.getPrefix(namespace);
+
+                                        if (prefix == null) {
+                                            prefix = generatePrefix(namespace);
+
+                                            xmlWriter.writeStartElement(prefix,"newPassword", namespace);
+                                            xmlWriter.writeNamespace(prefix, namespace);
+                                            xmlWriter.setPrefix(prefix, namespace);
+
+                                        } else {
+                                            xmlWriter.writeStartElement(namespace,"newPassword");
+                                        }
+
+                                    } else {
+                                        xmlWriter.writeStartElement("newPassword");
+                                    }
+                                
+
+                                          if (localNewPassword==null){
+                                              // write the nil attribute
+                                              
+                                                     throw new org.apache.axis2.databinding.ADBException("newPassword cannot be null!!");
+                                                  
+                                          }else{
+
+                                        
+                                                   xmlWriter.writeCharacters(localNewPassword);
                                             
                                           }
                                     
@@ -621,12 +685,21 @@
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
-                                                                      "password"));
+                                                                      "oldPassword"));
                                  
-                                        if (localPassword != null){
-                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localPassword));
+                                        if (localOldPassword != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localOldPassword));
                                         } else {
-                                           throw new org.apache.axis2.databinding.ADBException("password cannot be null!!");
+                                           throw new org.apache.axis2.databinding.ADBException("oldPassword cannot be null!!");
+                                        }
+                                    
+                                      elementList.add(new javax.xml.namespace.QName("",
+                                                                      "newPassword"));
+                                 
+                                        if (localNewPassword != null){
+                                            elementList.add(org.apache.axis2.databinding.utils.ConverterUtil.convertToString(localNewPassword));
+                                        } else {
+                                           throw new org.apache.axis2.databinding.ADBException("newPassword cannot be null!!");
                                         }
                                     
                                       elementList.add(new javax.xml.namespace.QName("",
@@ -753,11 +826,30 @@
                                     
                                     while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
                                 
-                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","password").equals(reader.getName())){
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","oldPassword").equals(reader.getName())){
                                 
                                     java.lang.String content = reader.getElementText();
                                     
-                                              object.setPassword(
+                                              object.setOldPassword(
+                                                    org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
+                                              
+                                        reader.next();
+                                    
+                              }  // End of if for expected property start element
+                                
+                                else{
+                                    // A start element we are not expecting indicates an invalid parameter was passed
+                                    throw new org.apache.axis2.databinding.ADBException("Unexpected subelement " + reader.getLocalName());
+                                }
+                            
+                                    
+                                    while (!reader.isStartElement() && !reader.isEndElement()) reader.next();
+                                
+                                    if (reader.isStartElement() && new javax.xml.namespace.QName("","newPassword").equals(reader.getName())){
+                                
+                                    java.lang.String content = reader.getElementText();
+                                    
+                                              object.setNewPassword(
                                                     org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
                                               
                                         reader.next();

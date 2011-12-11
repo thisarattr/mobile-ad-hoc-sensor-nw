@@ -142,14 +142,23 @@
             	<xsd:complexType>
             		<xsd:sequence>
             			<xsd:element name="username" type="xsd:string"/>
-						<xsd:element name="password" type="xsd:string"/>
-						<xsd:element name="imei" type="xsd:string"/>
-						<xsd:element name="email" type="xsd:string"/>
-						<xsd:element name="fullname" type="xsd:string"/>
+            			<xsd:element name="oldPassword" type="xsd:string"/>
+            			<xsd:element name="newPassword" type="xsd:string"/>
+            			<xsd:element name="imei" type="xsd:string"/>
+            			<xsd:element name="email" type="xsd:string"/>
+            			<xsd:element name="fullname" type="xsd:string"/>
             		</xsd:sequence>
             	</xsd:complexType>
             </xsd:element>
             <xsd:element name="EditUserResponseType" type="xsd:boolean"/>
+            <xsd:element name="GetUserRequestType">
+            	<xsd:complexType>
+            		<xsd:sequence>
+            			<xsd:element name="username" type="xsd:string"/>
+            		</xsd:sequence>
+            	</xsd:complexType>
+            </xsd:element>
+            <xsd:element name="GetUserResponseType" type="xsd:string"/>
         </xsd:schema>
   </wsdl:types>
   <wsdl:message name="SubscribeRequest">
@@ -172,16 +181,16 @@
     <wsdl:part name="ViewJobRequest" element="tns:ViewJobRequestType">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="UploadDataResponse">
-    <wsdl:part name="UploadDataResponse" element="tns:UploadDataResponseType">
+  <wsdl:message name="EmailDataResponse">
+    <wsdl:part name="EmailDataResponse" element="tns:EmailDataResponseType">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="LoginResponse">
     <wsdl:part name="LoginResponse" element="tns:LoginResponseType">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="EmailDataResponse">
-    <wsdl:part name="EmailDataResponse" element="tns:EmailDataResponseType">
+  <wsdl:message name="UploadDataResponse">
+    <wsdl:part name="UploadDataResponse" element="tns:UploadDataResponseType">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ViewDataResponse">
@@ -192,12 +201,12 @@
     <wsdl:part name="ViewJobResponse" element="tns:ViewJobResponseType">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="GetReferenceDataRequest">
-    <wsdl:part name="GetReferenceDataRequest" element="tns:GetReferenceDataRequestType">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="GetJobsRequest">
     <wsdl:part name="GetJobsRequest" element="tns:GetJobsRequestType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetReferenceDataRequest">
+    <wsdl:part name="GetReferenceDataRequest" element="tns:GetReferenceDataRequestType">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="GetMessageRequest">
@@ -210,6 +219,10 @@
   </wsdl:message>
   <wsdl:message name="EditUserResponse">
     <wsdl:part name="EditUserResponse" element="tns:EditUserResponseType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetUserRequest">
+    <wsdl:part name="GetUserRequest" element="tns:GetUserRequestType">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="AddJobResponse">
@@ -244,16 +257,20 @@
     <wsdl:part name="msgResponse" element="tns:out">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="GetUserResponse">
+    <wsdl:part name="GetUserResponse" element="tns:GetUserResponseType">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="LoginRequest">
     <wsdl:part name="LoginRequest" element="tns:LoginRequestType">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="EditJobResponse">
-    <wsdl:part name="EditJobResponse" element="tns:EditJobResponseType">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="GetJobsResponse">
     <wsdl:part name="GetJobsResponse" element="tns:GetJobsResponseType">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="EditJobResponse">
+    <wsdl:part name="EditJobResponse" element="tns:EditJobResponseType">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="EditUserRequest">
@@ -347,6 +364,12 @@
       <wsdl:input message="tns:EditUserRequest">
     </wsdl:input>
       <wsdl:output message="tns:EditUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUser">
+      <wsdl:input message="tns:GetUserRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:GetUserResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
@@ -471,6 +494,15 @@
     </wsdl:operation>
     <wsdl:operation name="EditUser">
       <soap:operation soapAction="http://mcs.ucsc.com/SensorService/EditUser"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUser">
+      <soap:operation soapAction="http://mcs.ucsc.com/SensorService/GetUser"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
