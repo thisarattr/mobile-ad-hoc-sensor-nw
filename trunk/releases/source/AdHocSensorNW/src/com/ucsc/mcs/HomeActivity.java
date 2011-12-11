@@ -1,5 +1,6 @@
 package com.ucsc.mcs;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.ucsc.mcs.constants.CommonConstants;
@@ -15,6 +16,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,12 +36,13 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 
 	private SensorManager mSensorManager;
 	private Sensor mMagnetometer;
-	private SensorListener mSensorListener= new SensorListener();
+	private SensorListener mSensorListener;
 	private List<Sensor> sensorList;
 	private SharedPreferences prefs;
-
-	private LocationManager mlocManager;
-	private SensorLocationListener mlocListener;
+	
+	private String username, imei;
+	private Location loc;
+	private SensorDao sensorDao;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -53,10 +57,21 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		
 		// Access saved preferences
 		String uname = prefs.getString("username", "");
-		//Access custom preferences
+		//Access application session preferences
 		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
-		String username = settings.getString(CommonConstants.USERNAME, "");
-		String password = settings.getString(CommonConstants.PASSWORD, "");
+		username = settings.getString(CommonConstants.USERNAME, "");
+		
+		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		imei = telephonyManager.getDeviceId();
+		
+		sensorDao = new SensorDao(this);
+
+		try {
+			sensorDao.open();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Log.d(TAG, e.toString());
+		}
 
 		// Initialize UI components
 		txtReadingValue = (TextView) findViewById(R.id.txtViewReadingVal);
@@ -81,17 +96,21 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-		//mSensorListener = new SensorListener();
+		mSensorListener = new SensorListener();
 		mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
-		txtReadingValue.setText(String.valueOf(mSensorListener.getMean()));
-		txtXVal.setText(String.valueOf(mSensorListener.getX()));
-		txtYVal.setText(String.valueOf(mSensorListener.getY()));
-		txtZVal.setText(String.valueOf(mSensorListener.getZ()));
+		for (int i = 0; i < 100; i++) {
+			txtReadingValue.setText(String.valueOf(mSensorListener.getMean()));
+			txtXVal.setText(String.valueOf(mSensorListener.getX()));
+			txtYVal.setText(String.valueOf(mSensorListener.getY()));
+			txtZVal.setText(String.valueOf(mSensorListener.getZ()));
+			
+		}
+		
 
-		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mlocListener = new SensorLocationListener();
-		Location loc = null;
+		LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		SensorLocationListener mlocListener = new SensorLocationListener();
+		
 
 		if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, mlocListener);
@@ -102,6 +121,7 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		} else {
 			txtGpsDisable.setVisibility(1);
 			btnGpsEnable.setVisibility(1);
+			btnSync.setEnabled(false);
 		}
 		
 		if(loc!=null){
@@ -188,8 +208,8 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.btnProfile) {
-			//Intent viewAllData = new Intent(v.getContext(), ServiceCallTestActivity.class);
-			//startActivityForResult(viewAllData, CommonConstants.VIEW_DATA_REQ_ID);
+			Intent updateProfile = new Intent(v.getContext(), UpdateProfileActivity.class);
+			startActivityForResult(updateProfile, CommonConstants.UPDATE_PROFILE_REQ_ID);
 			
 		}else if(v.getId() == R.id.btnGpsEnable){
 			Intent gspSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -204,8 +224,13 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 			startActivityForResult(viewJob, CommonConstants.VIEW_JOB_REQ_ID);
 			
 		}else if(v.getId() == R.id.btnSync){
-			Intent pwReset = new Intent(v.getContext(), PasswordRecoverActivity.class);
-			startActivityForResult(pwReset, CommonConstants.PW_RESET_REQ_ID);
+			//Intent pwReset = new Intent(v.getContext(), PasswordRecoverActivity.class);
+			//startActivityForResult(pwReset, CommonConstants.PW_RESET_REQ_ID);
+			
+			ServiceInvoker invoker = new ServiceInvoker();
+			invoker.sync(loc.getLatitude(), loc.getLongitude(), imei, username, sensorDao);
+			
+			Toast.makeText(HomeActivity.this, "Client successfully synchronized with the server.", Toast.LENGTH_LONG).show();
 		}
 
 	}

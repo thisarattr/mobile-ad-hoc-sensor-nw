@@ -23,6 +23,7 @@ public class CommonConstants {
 	public static final int LOGIN_REQ_ID = 5;
 	public static final int VIEW_JOB_REQ_ID = 6;
 	public static final int PW_RESET_REQ_ID = 7;
+	public static final int UPDATE_PROFILE_REQ_ID = 8;
 	
 	public static String USERNAME = "username";
 	public static String PASSWORD = "password";
@@ -50,6 +51,13 @@ public class CommonConstants {
 	public static final String VIEWDATA_LONG = "longitude";
 	public static final String VIEWDATA_READING = "reading";
 	public static final String VIEWDATA_USER = "username";
+	
+	public static final String GETUSER_ID = "id";
+	public static final String GETUSER_USERNAME = "username";
+	public static final String GETUSER_FULLNAME = "fullname";
+	public static final String GETUSER_EMAIL = "email";
+	public static final String GETUSER_RANK = "rank";
+	public static final String GETUSER_TIMESTAMP = "datetime";
 	
 	public static final int JOB_STATUS_RUNNING = 1;
 	public static final int JOB_STATUS_COMPLETED = 2;

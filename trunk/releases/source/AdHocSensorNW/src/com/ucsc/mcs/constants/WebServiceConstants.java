@@ -57,6 +57,8 @@ public class WebServiceConstants {
 	
 	public static final String SOAP_ACTION_EDIT_USER = "http://mcs.ucsc.com/SensorService/EditUser";
 	public static final String REQUEST_TYPE_EDIT_USER  = "EditUserRequestType";
-	
+
+	public static final String SOAP_ACTION_GET_USER = "http://mcs.ucsc.com/SensorService/GetUser";
+	public static final String REQUEST_TYPE_GET_USER  = "GetUserRequestType";
 	
 }
