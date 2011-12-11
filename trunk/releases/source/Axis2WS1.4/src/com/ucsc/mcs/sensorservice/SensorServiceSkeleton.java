@@ -129,11 +129,7 @@ public class SensorServiceSkeleton {
 		try {
 			
 			String password = loginRequestType.getPassword().trim();
-			byte[] bytesPassword = password.getBytes("UTF-8");
-
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] passwordDigest = md.digest(bytesPassword);
-			String md5Password = new String(passwordDigest);
+			String md5Password = getMD5Password(password);
 			
 			conn = getMySqlConnection();
 			String sql = "select count(*) val from user where username=? and password=?";
@@ -578,16 +574,13 @@ public class SensorServiceSkeleton {
 		String sql = "INSERT INTO user (username,password,fullname,imei,rank,email,datetime) values (?,?,?,?,?,?,now())";
 		
 		try {
-			String password = subscribeRequestType.getPassword();
-			byte[] bytesPassword = password.getBytes("UTF-8");
-
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] passwordDigest = md.digest(bytesPassword);
+			
+			String password = subscribeRequestType.getPassword().trim();
 			
 			conn = getMySqlConnection();
 			prepStmt=conn.prepareStatement(sql);
 			prepStmt.setString(1, subscribeRequestType.getUsername());
-			prepStmt.setString(2, new String(passwordDigest));
+			prepStmt.setString(2, getMD5Password(password));
 			prepStmt.setString(3, subscribeRequestType.getFullname());
 			prepStmt.setString(4, subscribeRequestType.getImei());
 			prepStmt.setInt(5,0);// rank stars with 0 and increments with each upload.
@@ -778,10 +771,7 @@ public class SensorServiceSkeleton {
 					String password = generatePassword();
 
 					// MD5 password digest.
-					byte[] bytesPassword = password.getBytes("UTF-8");
-					MessageDigest md = MessageDigest.getInstance("MD5");
-					byte[] passwordDigest = md.digest(bytesPassword);
-					String md5Password = new String(passwordDigest);
+					String md5Password = getMD5Password(password);
 
 					StringBuffer emailTxt = new StringBuffer();
 					emailTxt.append("Dear ").append(fullnameVal).append(",\n\n\n");
@@ -797,9 +787,11 @@ public class SensorServiceSkeleton {
 					prepStmt = conn.prepareStatement(sql);
 					prepStmt.setString(1, md5Password);
 					prepStmt.setString(2, usernameVal);
-					//TODO prepStmt.executeUpdate(); 
-					isAcctFound = true;
-
+					
+					int updateCount = prepStmt.executeUpdate();
+					if (updateCount == 1) {
+						isAcctFound = true;
+					}
 				}
 			}
 
@@ -815,6 +807,21 @@ public class SensorServiceSkeleton {
 
 		responseType.setPasswordRecoverResponseType(isAcctFound);
 		return responseType;
+	}
+
+	/**
+	 * @param password
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchAlgorithmException
+	 */
+	private String getMD5Password(final String password) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		
+		byte[] bytesPassword = password.getBytes("UTF-8");
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		byte[] passwordDigest = md.digest(bytesPassword);
+
+		return new String(passwordDigest);
 	}
 	
 	/**
@@ -887,8 +894,58 @@ public class SensorServiceSkeleton {
 	 */
 
 	public com.ucsc.mcs.sensorservice.EditUserResponseType EditUser(com.ucsc.mcs.sensorservice.EditUserRequestType editUserRequestType) {
-		// TODO : fill this with the necessary business logic
-		throw new java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#EditUser");
+		
+		Connection conn;
+		PreparedStatement prepStmt;
+		
+		EditUserResponseType userResponseType = new EditUserResponseType();
+		
+		String oldPassword = editUserRequestType.getOldPassword().trim();
+		String newPassword = editUserRequestType.getNewPassword().trim();
+		String sqlEditUser;
+		
+		if (newPassword != null && newPassword.length() > 0) {
+			sqlEditUser = "UPDATE user SET password=?, imei=?, fullname=?, email=? WHERE username=? AND password=?";
+		} else {
+			sqlEditUser = "UPDATE user SET imei=?, fullname=?, email=? WHERE username=? AND password=?";
+		}
+		
+		boolean isSuccess = false;
+		String error = null;
+		
+		try {
+			conn = getMySqlConnection();
+		
+			prepStmt = conn.prepareStatement(sqlEditUser);
+			int index = 0;
+			if (newPassword != null && newPassword.length() > 0) {
+				prepStmt.setString(++index, getMD5Password(newPassword));
+			}
+			prepStmt.setString(++index, editUserRequestType.getImei());
+			prepStmt.setString(++index, editUserRequestType.getFullname());
+			prepStmt.setString(++index, editUserRequestType.getEmail());
+			prepStmt.setString(++index, editUserRequestType.getUsername().trim());
+			prepStmt.setString(++index, getMD5Password(oldPassword));
+			int updateCount = prepStmt.executeUpdate();
+			if (updateCount == 1) {
+				isSuccess = true;
+			}
+			
+		} catch (NamingException e) {
+			error = "Error occurred while Updating new job. Original stacktrace: " + e.toString();
+			LOG.log(Level.SEVERE, error);
+		} catch (SQLException e) {
+			error = "Error occurred while Updating new job. Original stacktrace: " + e.toString();
+			LOG.log(Level.SEVERE, error);
+		} catch (UnsupportedEncodingException e) {
+			error = "Error occurred while Updating new job. Original stacktrace: " + e.toString();
+			LOG.log(Level.SEVERE, error);
+		} catch (NoSuchAlgorithmException e) {
+			error = "Error occurred while Updating new job. Original stacktrace: " + e.toString();
+			LOG.log(Level.SEVERE, error);
+		}
+		userResponseType.setEditUserResponseType(isSuccess);
+		return userResponseType;
 	}
 
 	/**
@@ -924,8 +981,11 @@ public class SensorServiceSkeleton {
 			prepStmt.setString(9, editJobRequestType.getDescription());
 			prepStmt.setLong(10, editJobRequestType.getJobId());
 			prepStmt.setString(11, editJobRequestType.getUsername());
-			prepStmt.execute();
-			isSuccess=true;
+			
+			int updateCount = prepStmt.executeUpdate();
+			if (updateCount == 1) {
+				isSuccess = true;
+			}
 			
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while Updating new job. Original stacktrace: " + e.toString());
@@ -934,5 +994,62 @@ public class SensorServiceSkeleton {
 		}
 		editJobResponse.setEditJobResponseType(isSuccess);
 		return editJobResponse;
+	}
+	
+	/**
+	 * Auto generated method signature
+	 * 
+	 * @param getUserRequestType
+	 */
+
+	public com.ucsc.mcs.sensorservice.GetUserResponseType GetUser(com.ucsc.mcs.sensorservice.GetUserRequestType getUserRequestType) {
+		
+		Connection conn;
+		PreparedStatement prepStmt;
+		ResultSet resultSet;
+		
+		GetUserResponseType userResponseType = new GetUserResponseType(); 
+		
+		String sqlGetUser = "SELECT id,username,fullname,email,rank,datetime FROM user WHERE username=?";
+		boolean isSuccess = false;
+		String error = null;
+		
+		try {
+			conn = getMySqlConnection();
+			
+			prepStmt = conn.prepareStatement(sqlGetUser);
+			prepStmt.setString(1, getUserRequestType.getUsername().trim());
+			
+			resultSet = prepStmt.executeQuery();
+			
+			// Data order: id,username,fullname,email,rank,datatime 
+			StringBuffer userInfo = new StringBuffer();
+			if (resultSet.next()) {
+				userInfo.append(resultSet.getInt("id") + DATA_DELEMETER);
+				userInfo.append(resultSet.getString("username") + DATA_DELEMETER);
+				userInfo.append(resultSet.getString("fullname") + DATA_DELEMETER);
+				userInfo.append(resultSet.getString("email") + DATA_DELEMETER);
+				userInfo.append(resultSet.getInt("rank") + DATA_DELEMETER);
+				userInfo.append(resultSet.getTimestamp("datetime").getTime());
+			}
+			if (userInfo.length() == 0) {
+				userInfo.append("Error: User information not found!");
+			}
+			userResponseType.setGetUserResponseType(userInfo.toString());
+			isSuccess = true;
+			
+		} catch (NamingException e) {
+			error = "Error occurred while retrieving user details. Original stacktrace: " + e.toString();
+			LOG.log(Level.SEVERE, error);
+		} catch (SQLException e) {
+			error = "Error occurred while retrieving user details. Original stacktrace: " + e.toString();
+			LOG.log(Level.SEVERE, error);
+		}
+		
+		if(!isSuccess){
+			userResponseType.setGetUserResponseType(error);
+		}
+		
+		return userResponseType;
 	}
 }

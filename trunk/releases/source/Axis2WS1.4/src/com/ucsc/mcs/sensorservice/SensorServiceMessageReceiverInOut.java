@@ -126,22 +126,22 @@
                                         envelope = toEnvelope(getSOAPFactory(msgContext), subscribeResponseType9, false);
                                     } else 
 
-            if("Login".equals(methodName)){
+            if("GetUser".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.LoginResponseType loginResponseType11 = null;
-	                        com.ucsc.mcs.sensorservice.LoginRequestType wrappedParam =
-                                                             (com.ucsc.mcs.sensorservice.LoginRequestType)fromOM(
+                com.ucsc.mcs.sensorservice.GetUserResponseType getUserResponseType11 = null;
+	                        com.ucsc.mcs.sensorservice.GetUserRequestType wrappedParam =
+                                                             (com.ucsc.mcs.sensorservice.GetUserRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
-                                    com.ucsc.mcs.sensorservice.LoginRequestType.class,
+                                    com.ucsc.mcs.sensorservice.GetUserRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               loginResponseType11 =
+                                               getUserResponseType11 =
                                                    
                                                    
-                                                         skel.Login(wrappedParam)
+                                                         skel.GetUser(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), loginResponseType11, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), getUserResponseType11, false);
                                     } else 
 
             if("EditUser".equals(methodName)){
@@ -162,130 +162,148 @@
                                         envelope = toEnvelope(getSOAPFactory(msgContext), editUserResponseType13, false);
                                     } else 
 
+            if("Login".equals(methodName)){
+                
+                com.ucsc.mcs.sensorservice.LoginResponseType loginResponseType15 = null;
+	                        com.ucsc.mcs.sensorservice.LoginRequestType wrappedParam =
+                                                             (com.ucsc.mcs.sensorservice.LoginRequestType)fromOM(
+                                    msgContext.getEnvelope().getBody().getFirstElement(),
+                                    com.ucsc.mcs.sensorservice.LoginRequestType.class,
+                                    getEnvelopeNamespaces(msgContext.getEnvelope()));
+                                                
+                                               loginResponseType15 =
+                                                   
+                                                   
+                                                         skel.Login(wrappedParam)
+                                                    ;
+                                            
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), loginResponseType15, false);
+                                    } else 
+
             if("EditJob".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.EditJobResponseType editJobResponseType15 = null;
+                com.ucsc.mcs.sensorservice.EditJobResponseType editJobResponseType17 = null;
 	                        com.ucsc.mcs.sensorservice.EditJobRequestType wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.EditJobRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.EditJobRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               editJobResponseType15 =
+                                               editJobResponseType17 =
                                                    
                                                    
                                                          skel.EditJob(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), editJobResponseType15, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), editJobResponseType17, false);
                                     } else 
 
             if("GetReferenceData".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.GetReferenceDataResponseType getReferenceDataResponseType17 = null;
+                com.ucsc.mcs.sensorservice.GetReferenceDataResponseType getReferenceDataResponseType19 = null;
 	                        com.ucsc.mcs.sensorservice.GetReferenceDataRequestType wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.GetReferenceDataRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.GetReferenceDataRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               getReferenceDataResponseType17 =
+                                               getReferenceDataResponseType19 =
                                                    
                                                    
                                                          skel.GetReferenceData(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), getReferenceDataResponseType17, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), getReferenceDataResponseType19, false);
                                     } else 
 
             if("CalculateRectArea".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.Area area19 = null;
+                com.ucsc.mcs.sensorservice.Area area21 = null;
 	                        com.ucsc.mcs.sensorservice.Parameters wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.Parameters)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.Parameters.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               area19 =
+                                               area21 =
                                                    
                                                    
                                                          skel.CalculateRectArea(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), area19, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), area21, false);
                                     } else 
 
             if("ViewData".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.ViewDataResponseType viewDataResponseType21 = null;
+                com.ucsc.mcs.sensorservice.ViewDataResponseType viewDataResponseType23 = null;
 	                        com.ucsc.mcs.sensorservice.ViewDataRequestType wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.ViewDataRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.ViewDataRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               viewDataResponseType21 =
+                                               viewDataResponseType23 =
                                                    
                                                    
                                                          skel.ViewData(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), viewDataResponseType21, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), viewDataResponseType23, false);
                                     } else 
 
             if("GetJobs".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.GetJobsResponseType getJobsResponseType23 = null;
+                com.ucsc.mcs.sensorservice.GetJobsResponseType getJobsResponseType25 = null;
 	                        com.ucsc.mcs.sensorservice.GetJobsRequestType wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.GetJobsRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.GetJobsRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               getJobsResponseType23 =
+                                               getJobsResponseType25 =
                                                    
                                                    
                                                          skel.GetJobs(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), getJobsResponseType23, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), getJobsResponseType25, false);
                                     } else 
 
             if("ViewJob".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.ViewJobResponseType viewJobResponseType25 = null;
+                com.ucsc.mcs.sensorservice.ViewJobResponseType viewJobResponseType27 = null;
 	                        com.ucsc.mcs.sensorservice.ViewJobRequestType wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.ViewJobRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.ViewJobRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               viewJobResponseType25 =
+                                               viewJobResponseType27 =
                                                    
                                                    
                                                          skel.ViewJob(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), viewJobResponseType25, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), viewJobResponseType27, false);
                                     } else 
 
             if("PasswordRecover".equals(methodName)){
                 
-                com.ucsc.mcs.sensorservice.PasswordRecoverResponseType passwordRecoverResponseType27 = null;
+                com.ucsc.mcs.sensorservice.PasswordRecoverResponseType passwordRecoverResponseType29 = null;
 	                        com.ucsc.mcs.sensorservice.PasswordRecoverRequestType wrappedParam =
                                                              (com.ucsc.mcs.sensorservice.PasswordRecoverRequestType)fromOM(
                                     msgContext.getEnvelope().getBody().getFirstElement(),
                                     com.ucsc.mcs.sensorservice.PasswordRecoverRequestType.class,
                                     getEnvelopeNamespaces(msgContext.getEnvelope()));
                                                 
-                                               passwordRecoverResponseType27 =
+                                               passwordRecoverResponseType29 =
                                                    
                                                    
                                                          skel.PasswordRecover(wrappedParam)
                                                     ;
                                             
-                                        envelope = toEnvelope(getSOAPFactory(msgContext), passwordRecoverResponseType27, false);
+                                        envelope = toEnvelope(getSOAPFactory(msgContext), passwordRecoverResponseType29, false);
                                     
             } else {
               throw new java.lang.RuntimeException("method not found");
@@ -441,12 +459,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(com.ucsc.mcs.sensorservice.LoginRequestType param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(com.ucsc.mcs.sensorservice.GetUserRequestType param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(com.ucsc.mcs.sensorservice.LoginRequestType.MY_QNAME,
+                             return param.getOMElement(com.ucsc.mcs.sensorservice.GetUserRequestType.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -455,12 +473,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(com.ucsc.mcs.sensorservice.LoginResponseType param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(com.ucsc.mcs.sensorservice.GetUserResponseType param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(com.ucsc.mcs.sensorservice.LoginResponseType.MY_QNAME,
+                             return param.getOMElement(com.ucsc.mcs.sensorservice.GetUserResponseType.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -489,6 +507,34 @@
             
                         try{
                              return param.getOMElement(com.ucsc.mcs.sensorservice.EditUserResponseType.MY_QNAME,
+                                          org.apache.axiom.om.OMAbstractFactory.getOMFactory());
+                        } catch(org.apache.axis2.databinding.ADBException e){
+                            throw org.apache.axis2.AxisFault.makeFault(e);
+                        }
+                    
+
+            }
+        
+            private  org.apache.axiom.om.OMElement  toOM(com.ucsc.mcs.sensorservice.LoginRequestType param, boolean optimizeContent)
+            throws org.apache.axis2.AxisFault {
+
+            
+                        try{
+                             return param.getOMElement(com.ucsc.mcs.sensorservice.LoginRequestType.MY_QNAME,
+                                          org.apache.axiom.om.OMAbstractFactory.getOMFactory());
+                        } catch(org.apache.axis2.databinding.ADBException e){
+                            throw org.apache.axis2.AxisFault.makeFault(e);
+                        }
+                    
+
+            }
+        
+            private  org.apache.axiom.om.OMElement  toOM(com.ucsc.mcs.sensorservice.LoginResponseType param, boolean optimizeContent)
+            throws org.apache.axis2.AxisFault {
+
+            
+                        try{
+                             return param.getOMElement(com.ucsc.mcs.sensorservice.LoginResponseType.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -788,12 +834,12 @@
                                 return wrappedElement;
                          }
                     
-                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, com.ucsc.mcs.sensorservice.LoginResponseType param, boolean optimizeContent)
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, com.ucsc.mcs.sensorservice.GetUserResponseType param, boolean optimizeContent)
                         throws org.apache.axis2.AxisFault{
                       try{
                           org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
                            
-                                    emptyEnvelope.getBody().addChild(param.getOMElement(com.ucsc.mcs.sensorservice.LoginResponseType.MY_QNAME,factory));
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(com.ucsc.mcs.sensorservice.GetUserResponseType.MY_QNAME,factory));
                                 
 
                          return emptyEnvelope;
@@ -802,8 +848,8 @@
                     }
                     }
                     
-                         private com.ucsc.mcs.sensorservice.LoginResponseType wrapLogin(){
-                                com.ucsc.mcs.sensorservice.LoginResponseType wrappedElement = new com.ucsc.mcs.sensorservice.LoginResponseType();
+                         private com.ucsc.mcs.sensorservice.GetUserResponseType wrapGetUser(){
+                                com.ucsc.mcs.sensorservice.GetUserResponseType wrappedElement = new com.ucsc.mcs.sensorservice.GetUserResponseType();
                                 return wrappedElement;
                          }
                     
@@ -823,6 +869,25 @@
                     
                          private com.ucsc.mcs.sensorservice.EditUserResponseType wrapEditUser(){
                                 com.ucsc.mcs.sensorservice.EditUserResponseType wrappedElement = new com.ucsc.mcs.sensorservice.EditUserResponseType();
+                                return wrappedElement;
+                         }
+                    
+                    private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, com.ucsc.mcs.sensorservice.LoginResponseType param, boolean optimizeContent)
+                        throws org.apache.axis2.AxisFault{
+                      try{
+                          org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
+                           
+                                    emptyEnvelope.getBody().addChild(param.getOMElement(com.ucsc.mcs.sensorservice.LoginResponseType.MY_QNAME,factory));
+                                
+
+                         return emptyEnvelope;
+                    } catch(org.apache.axis2.databinding.ADBException e){
+                        throw org.apache.axis2.AxisFault.makeFault(e);
+                    }
+                    }
+                    
+                         private com.ucsc.mcs.sensorservice.LoginResponseType wrapLogin(){
+                                com.ucsc.mcs.sensorservice.LoginResponseType wrappedElement = new com.ucsc.mcs.sensorservice.LoginResponseType();
                                 return wrappedElement;
                          }
                     
@@ -1046,16 +1111,16 @@
 
                 }
            
-                if (com.ucsc.mcs.sensorservice.LoginRequestType.class.equals(type)){
+                if (com.ucsc.mcs.sensorservice.GetUserRequestType.class.equals(type)){
                 
-                           return com.ucsc.mcs.sensorservice.LoginRequestType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return com.ucsc.mcs.sensorservice.GetUserRequestType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (com.ucsc.mcs.sensorservice.LoginResponseType.class.equals(type)){
+                if (com.ucsc.mcs.sensorservice.GetUserResponseType.class.equals(type)){
                 
-                           return com.ucsc.mcs.sensorservice.LoginResponseType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return com.ucsc.mcs.sensorservice.GetUserResponseType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
@@ -1070,6 +1135,20 @@
                 if (com.ucsc.mcs.sensorservice.EditUserResponseType.class.equals(type)){
                 
                            return com.ucsc.mcs.sensorservice.EditUserResponseType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                    
+
+                }
+           
+                if (com.ucsc.mcs.sensorservice.LoginRequestType.class.equals(type)){
+                
+                           return com.ucsc.mcs.sensorservice.LoginRequestType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                    
+
+                }
+           
+                if (com.ucsc.mcs.sensorservice.LoginResponseType.class.equals(type)){
+                
+                           return com.ucsc.mcs.sensorservice.LoginResponseType.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
