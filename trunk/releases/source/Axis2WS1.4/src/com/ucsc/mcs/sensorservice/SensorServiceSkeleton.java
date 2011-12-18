@@ -312,6 +312,8 @@ public class SensorServiceSkeleton {
 				job.append(resultSet.getTimestamp("expire_time").getTime()+DATA_DELEMETER);
 				job.append(resultSet.getInt("status"));
 				
+				System.out.println("Job found for the user: " + resultSet.getInt("user_id") +"  Job Detail: "+ job.toString());
+				
 				//Increment the node count by to indicate number of nodes processing this job.
 				sql = "UPDATE job SET node_count=node_count+1 WHERE id=?";
 				prepStmt = conn.prepareStatement(sql);
@@ -320,6 +322,7 @@ public class SensorServiceSkeleton {
 				jobsResponseType.setGetJobsResponseType(job.toString());
 			}else{
 				jobsResponseType.setGetJobsResponseType(" ");
+				System.out.println("Job not found for the userId : ");
 			}
 			
 			
@@ -513,7 +516,7 @@ public class SensorServiceSkeleton {
 		ResultSet resultSet;
 		
 		AddJobResponseType addJobResponse = new AddJobResponseType();
-		String sqlJobId = "SELECT id FROM user WHERE username=? OR imei=?";
+		String sqlJobId = "SELECT id FROM user WHERE username=?";
 		String sqlJobInsrt = "INSERT INTO job (sensor_id,nodes,node_count,user_id,latitude,longitude,loc_range,start_time,expire_time,frequency,time_period,description,datetime) " +
 								"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,now())";
 		boolean isSuccess = false;
@@ -523,7 +526,6 @@ public class SensorServiceSkeleton {
 			conn = getMySqlConnection();
 			prepStmt = conn.prepareStatement(sqlJobId);
 			prepStmt.setString(1, addJobRequestType.getUsername());
-			prepStmt.setString(2, addJobRequestType.getImei());
 			resultSet = prepStmt.executeQuery();
 			if (resultSet.first() && resultSet.isLast()) {
 				userId = resultSet.getLong(1);
