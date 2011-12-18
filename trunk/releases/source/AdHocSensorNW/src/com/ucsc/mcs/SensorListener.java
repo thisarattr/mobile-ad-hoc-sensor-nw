@@ -15,10 +15,10 @@ public class SensorListener implements SensorEventListener {
 	
 	private static final String TAG = SensorListener.class.getSimpleName();
 	
-	private float x;
-	private float y;
-	private float z;
-	private float mean;
+	private Float x = 0.0f;
+	private Float y = 0.0f;
+	private Float z = 0.0f;
+	private Float mean = 0.0f;
 
 	/* (non-Javadoc)
 	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
@@ -36,34 +36,34 @@ public class SensorListener implements SensorEventListener {
 		x = event.values[0];
 		y = event.values[1];
 		z = event.values[2];
-		mean = (x + y + z) / 3;	
+		mean = Double.valueOf(Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)))).floatValue();	
 	}
 
 	/**
 	 * @return the x
 	 */
-	public float getX() {
+	public Float getX() {
 		return x;
 	}
 
 	/**
 	 * @return the y
 	 */
-	public float getY() {
+	public Float getY() {
 		return y;
 	}
 
 	/**
 	 * @return the z
 	 */
-	public float getZ() {
+	public Float getZ() {
 		return z;
 	}
 
 	/**
 	 * @return the mean
 	 */
-	public float getMean() {
+	public Float getMean() {
 		return mean;
 	}
 

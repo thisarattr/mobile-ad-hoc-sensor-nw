@@ -33,7 +33,7 @@ public class RecorderService extends Service {
 
 	static final long MIN_DELAY = 60000; // a minute
 	//static final long UPLOAD_TIMEOUT = 60000*60*2;
-	static final long UPLOAD_TIMEOUT = 60000*15;
+	static final long UPLOAD_TIMEOUT = 60000*5;
 	static final long JOB_CHECK_TIMEOUT = 60000*15;
 	private boolean runFlag = false;
 
@@ -42,13 +42,13 @@ public class RecorderService extends Service {
 	private SensorDao sensorDao;
 
 	// Sensor related
-	private SensorManager mSensorManager;
-	private Sensor mMagnetometer;
-	private SensorListener mSensorListener;
+	private SensorManager sensorManager;
+	private Sensor magnetometer;
+	private SensorListener sensorListener;
 
 	// Location related
-	private LocationManager mlocManager;
-	private SensorLocationListener mlocListener;
+	private LocationManager locManager;
+	private SensorLocationListener locListener;
 	
 	//Phone imei
 	private String imei = null;
@@ -86,23 +86,23 @@ public class RecorderService extends Service {
 		}
 
 		// Adding sensor manager or sense the magnetic field change.
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-		mSensorListener = new SensorListener();
-		mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		sensorListener = new SensorListener();
+		sensorManager.registerListener(sensorListener, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		// Location service initialization
-		mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mlocListener = new SensorLocationListener();
+		locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locListener = new SensorLocationListener();
 		Location loc = null;
 		
-		if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
-			loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locListener);
+			loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			Log.d(TAG, "GPS provider enabled and using.");
-		} else if (mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mlocListener);
-			loc = mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		} else if (locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+			locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locListener);
+			loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			Log.d(TAG, "GPS provider disabled and using network provider.");
 		} else {
 			Log.d(TAG, "GPS provider and network provider both disabled.");
@@ -115,8 +115,8 @@ public class RecorderService extends Service {
 		}
 		
 		if (loc != null) {
-			mlocListener.setLatitude(loc.getLatitude());
-			mlocListener.setLongitute(loc.getLongitude());
+			locListener.setLatitude(loc.getLatitude());
+			locListener.setLongitute(loc.getLongitude());
 		}
 		
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -129,7 +129,7 @@ public class RecorderService extends Service {
 		//Sync with the server database.
 		//get the all unfinished and valid jobs from the database.
 		//Upload Data for this sequence job_id, imei, datetime, latitude, longitude, reading
-		ServiceInvoker.sync(mlocListener.getLatitude(), mlocListener.getLongitute(), imei, username, sensorDao);
+		ServiceInvoker.sync(locListener.getLatitude(), locListener.getLongitute(), imei, username, sensorDao);
 		
 		Log.d(TAG, "onCreated");
 
@@ -144,7 +144,7 @@ public class RecorderService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 
-		mSensorManager.unregisterListener(mSensorListener);
+		sensorManager.unregisterListener(sensorListener);
 		this.runFlag = false;
 		this.updater.interrupt();
 		this.updater = null;
@@ -213,19 +213,24 @@ public class RecorderService extends Service {
 						uploadConter += 1;
 						// Upload data
 						if (UPLOAD_TIMEOUT <= uploadConter * jobFrequency * MIN_DELAY) {
-							boolean isUploadSuccess = ServiceInvoker.uploadData(imei, username, sensorDao);
-							if (isUploadSuccess) {
-								uploadConter = 0;
+							if (ServiceInvoker.serviceCheck()) {
+								
+								boolean isUploadSuccess = ServiceInvoker.uploadData(imei, username, sensorDao);
+								if (isUploadSuccess) {
+									uploadConter = 0;
+								}
+							} else {
+								Log.e(TAG, "Recorder Service trying to upload data but since service down it postpone upload.");
 							}
 						}
 
 						long timeNow = System.currentTimeMillis();
-						double latitude = mlocListener.getLatitude();
-						double longitude = mlocListener.getLongitute();
+						double latitude = locListener.getLatitude();
+						double longitude = locListener.getLongitute();
 						double reading = 0.0;
 						if (jobSensorId == 1) {
 							// this is megenetic field sensor
-							reading = mSensorListener.getMean();
+							reading = sensorListener.getMean();
 						}
 						// dist = arccos(sin(lat1) · sin(lat2) + cos(lat1) · cos(lat2) · cos(lon1 - lon2)) · R (6371)
 						double dist = Math.acos(Math.sin(jobLatitude * CommonConstants.RADIAN) * Math.sin(latitude * CommonConstants.RADIAN)
@@ -303,7 +308,7 @@ public class RecorderService extends Service {
 					try {
 						Log.i(TAG, "There are no jobs found and thread will go to sleep for "+JOB_CHECK_TIMEOUT+"ms!!!");
 						Thread.sleep(JOB_CHECK_TIMEOUT);
-						ServiceInvoker.sync(mlocListener.getLatitude(), mlocListener.getLongitute(), imei, username, sensorDao);
+						ServiceInvoker.sync(locListener.getLatitude(), locListener.getLongitute(), imei, username, sensorDao);
 					} catch (InterruptedException e) {
 						Log.e(TAG, "Error occured while make thread sleep cos no jobs found!!! Original stacktrace: " + e.toString());
 					}

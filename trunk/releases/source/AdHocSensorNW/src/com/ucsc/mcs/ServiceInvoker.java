@@ -34,6 +34,42 @@ public class ServiceInvoker {
 
 	private static final String TAG = ServiceInvoker.class.getSimpleName();
 	
+	
+	/**
+	 * @return
+	 */
+	public static Boolean serviceCheck() {
+
+		Boolean output = false;
+		SoapObject request = new SoapObject(WebServiceConstants.NAMESPACE, WebServiceConstants.REQUEST_TYPE_AREA);
+		request.addProperty("width", 2);
+		request.addProperty("height", 3);
+
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.dotNet = false;
+		envelope.setOutputSoapObject(request);
+
+		HttpTransportSE ht = new HttpTransportSE(WebServiceConstants.URL);
+
+		try {
+			ht.call(WebServiceConstants.SOAP_ACTION_AREA, envelope);
+			SoapPrimitive sp = (SoapPrimitive) envelope.bodyIn;
+			int val = Integer.parseInt(sp.toString());
+			if (val == 6) {
+				output = true;
+			}
+
+		} catch (IOException e) {
+			Log.d(TAG, "Error occur when invoking Login service. Original Error:" + e.toString());
+		} catch (XmlPullParserException e) {
+			Log.d(TAG, "Error occur when invoking Login service. Original Error:" + e.toString());
+		} catch (Exception e) {
+			Log.d(TAG, "Error occur when invoking Login service. Original Error:" + e.toString());
+		}
+
+		return output;
+	}
+	
 
 	/**
 	 * @param username
@@ -370,9 +406,11 @@ public class ServiceInvoker {
 		
 		if (jobs != null && jobs.length()>0 && !jobs.contains("Error")) {
 			String[] rowArray = jobs.split(CommonConstants.ROW_DELEMETER);
-			jobList = new ArrayList<Map<String,String>>(); 
+			jobList = new ArrayList<Map<String,String>>();
+			addJobHeader(jobList);
 			
 			for (int i = 0; i < rowArray.length; i++) {
+				
 				Map<String, String> dataMap = new HashMap<String, String>();
 				String[] dataArray = rowArray[i].split(CommonConstants.DATA_DELEMETER);
 				dataMap.put(CommonConstants.VIEWJOB_ID, dataArray[0]);
@@ -395,6 +433,28 @@ public class ServiceInvoker {
 		}
 		
 		return jobList;
+	}
+
+	/**
+	 * @param jobList
+	 */
+	private void addJobHeader(List<Map<String, String>> jobList) {
+		Map<String, String> dataMap = new HashMap<String, String>();
+		
+		dataMap.put(CommonConstants.VIEWJOB_ID, "Id");
+		dataMap.put(CommonConstants.VIEWJOB_SENSORNAME, "Sensor");
+		dataMap.put(CommonConstants.VIEWJOB_STARTTIME, "Start");
+		dataMap.put(CommonConstants.VIEWJOB_EXPIRETIME, "Expire");
+		dataMap.put(CommonConstants.VIEWJOB_FREQ, "Freq");
+		dataMap.put(CommonConstants.VIEWJOB_TIMEPERIOD, "Period");
+		dataMap.put(CommonConstants.VIEWJOB_LAT, "Lat");
+		dataMap.put(CommonConstants.VIEWJOB_LONG, "Long");
+		dataMap.put(CommonConstants.VIEWJOB_LOCRANGE, "Loc Range");
+		dataMap.put(CommonConstants.VIEWJOB_NODES, "Nodes");
+		dataMap.put(CommonConstants.VIEWJOB_DESC, "Description");
+		dataMap.put(CommonConstants.VIEWJOB_DATATIME, "Date");
+		dataMap.put(CommonConstants.VIEWJOB_STATUS, "Status");
+		jobList.add(dataMap);
 	}
 	
 	/**
@@ -496,6 +556,7 @@ public class ServiceInvoker {
 		if (jobs != null && jobs.length()>0 && !jobs.contains("Error")) {
 			String[] rowArray = jobs.split(CommonConstants.ROW_DELEMETER);
 			dataList = new ArrayList<Map<String,String>>(); 
+			addDataHeader(dataList);
 			
 			for (int i = 0; i < rowArray.length; i++) {
 				Map<String, String> dataMap = new HashMap<String, String>();
@@ -513,6 +574,21 @@ public class ServiceInvoker {
 		}
 		
 		return dataList;
+	}
+
+	/**
+	 * @param dataList
+	 * @return
+	 */
+	private void addDataHeader(List<Map<String, String>> dataList) {
+		Map<String, String> dataMap = new HashMap<String, String>();
+		dataMap.put(CommonConstants.VIEWDATA_ID, "Id");
+		dataMap.put(CommonConstants.VIEWDATA_TIMESTAMP, "Date");
+		dataMap.put(CommonConstants.VIEWDATA_LAT, "Lat");
+		dataMap.put(CommonConstants.VIEWDATA_LONG, "Long");
+		dataMap.put(CommonConstants.VIEWDATA_READING, "Val");
+		dataMap.put(CommonConstants.VIEWDATA_USER, "User");
+		dataList.add(dataMap);
 	}
 	
 

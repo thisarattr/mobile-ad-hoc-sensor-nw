@@ -19,10 +19,13 @@ public class SensorLocationListener implements LocationListener {
 	private Double latitude=0.0;
 	private Double longitute=0.0;
 	
+	/* (non-Javadoc)
+	 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+	 */
 	public void onLocationChanged(Location location) {
 		
 		latitude = location.getLatitude();
-		latitude = location.getLongitude();
+		longitute = location.getLongitude();
 
 		Log.d(TAG, "Latitute:"+latitude +"\nLongitude:"+longitute);
 		
