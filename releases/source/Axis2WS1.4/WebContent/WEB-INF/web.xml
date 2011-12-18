@@ -8,11 +8,11 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 	<resource-ref>
-	<description>This is the java mail source ref.</description>
-	<res-ref-name>mail/JavaMail</res-ref-name>
-	<res-type>javax.mail.Session</res-type>
-	<res-auth>Container</res-auth>
-	<res-sharing-scope>Shareable</res-sharing-scope>
+		<description>This is the java mail source ref.</description>
+		<res-ref-name>mail/JavaMail</res-ref-name>
+		<res-type>javax.mail.Session</res-type>
+		<res-auth>Container</res-auth>
+		<res-sharing-scope>Shareable</res-sharing-scope>
 	</resource-ref>
 	<servlet>
 		<display-name>Apache-Axis Servlet</display-name>
