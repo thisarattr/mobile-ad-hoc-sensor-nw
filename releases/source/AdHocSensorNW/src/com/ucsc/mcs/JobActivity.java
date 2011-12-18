@@ -103,6 +103,7 @@ public class JobActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 
 		Long jobId = Long.parseLong((String) bundle.get(CommonConstants.VIEWJOB_ID));
+		int jobStatus = Integer.parseInt((String)bundle.get(CommonConstants.VIEWJOB_STATUS));
 
 		// Retrieve application session data.
 		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
@@ -110,9 +111,13 @@ public class JobActivity extends Activity implements OnClickListener{
 
 		if (v.getId() == R.id.btnJobEdit) {
 
-			Intent editJob = new Intent(this, EditJobActivity.class);
-			editJob.putExtras(bundle);
-			startActivity(editJob);
+			if (jobStatus == CommonConstants.JOB_STATUS_RUNNING) {
+				Intent editJob = new Intent(this, EditJobActivity.class);
+				editJob.putExtras(bundle);
+				startActivity(editJob);
+			} else {
+				Toast.makeText(this, "You can edit running jobs only.", Toast.LENGTH_LONG).show();
+			}
 
 		} else if (v.getId() == R.id.btnJobViewData) {
 			

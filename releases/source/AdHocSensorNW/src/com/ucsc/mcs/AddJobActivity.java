@@ -254,7 +254,7 @@ public class AddJobActivity extends Activity implements OnClickListener, OnCheck
 						startActivityForResult(home, CommonConstants.HOME_REQ_ID);
 
 					} else {
-						Toast.makeText(AddJobActivity.this, "Job Added Failed! Try again.", Toast.LENGTH_LONG).show();
+						Toast.makeText(AddJobActivity.this, "Could not add job! Try again.", Toast.LENGTH_LONG).show();
 					}
 				}
 			} else {

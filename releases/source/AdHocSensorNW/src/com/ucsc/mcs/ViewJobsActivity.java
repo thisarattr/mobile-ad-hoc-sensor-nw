@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,9 +58,11 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 		// Retrieve application session data.
 		SharedPreferences settings = getSharedPreferences(CommonConstants.PREF_USER_DETAILS, MODE_PRIVATE);
 		username = settings.getString(CommonConstants.USERNAME, "");
+		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		String imei = telephonyManager.getDeviceId();
 		
 		try {
-			jobList = serviceInvoker.viewJobs("0000-0000-0000", username);
+			jobList = serviceInvoker.viewJobs(imei, username);
 
 			SimpleAdapter adpter = new SimpleAdapter(this, jobList, R.layout.viewjob_row, new String[] { CommonConstants.VIEWJOB_ID,
 					CommonConstants.VIEWJOB_DATATIME, CommonConstants.VIEWJOB_LAT, CommonConstants.VIEWJOB_LONG }, new int[] { R.id.JOBVIEW_ID,
@@ -145,6 +149,7 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 		// Get the item that was clicked
 		Map<String, String> selectedRec = (Map<String, String>) this.getListAdapter().getItem(info.position);
 		Long jobId = Long.parseLong(selectedRec.get(CommonConstants.VIEWJOB_ID));
+		int jobStatus = Integer.parseInt(selectedRec.get(CommonConstants.VIEWJOB_STATUS));
 		
 		Bundle bundle = new Bundle();
 		for (Entry<String, String> element : selectedRec.entrySet()) {
@@ -153,11 +158,18 @@ public class ViewJobsActivity extends ListActivity implements OnItemLongClickLis
 
 		if (menuItemId == EDIT_JOB_ID) {
 
-			Intent editJob = new Intent(this, EditJobActivity.class);
-			editJob.putExtras(bundle);
-			startActivity(editJob);
+			if (jobStatus == CommonConstants.JOB_STATUS_RUNNING) {
+				Intent editJob = new Intent(this, EditJobActivity.class);
+				editJob.putExtras(bundle);
+				startActivity(editJob);
+				Toast.makeText(
+						this,
+						"You selected: " + selectedRec.get(CommonConstants.VIEWJOB_DATATIME) + "  "
+								+ selectedRec.get(CommonConstants.VIEWJOB_SENSORNAME), Toast.LENGTH_LONG).show();
 
-			Toast.makeText(this, "You selected: " + selectedRec.get(CommonConstants.VIEWJOB_DATATIME)+"  "+selectedRec.get(CommonConstants.VIEWJOB_SENSORNAME), Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(this, "You can edit running jobs only.", Toast.LENGTH_LONG).show();
+			}
 
 		} else if (menuItemId == VIEW_DATA_ID) {
 

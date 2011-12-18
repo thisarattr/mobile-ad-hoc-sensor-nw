@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,16 +29,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity implements OnSharedPreferenceChangeListener, OnClickListener {
+public class HomeActivity extends Activity implements OnSharedPreferenceChangeListener, OnClickListener, SensorEventListener {
 
 	private static final String TAG = HomeActivity.class.getSimpleName();
 
-	private TextView txtReadingValue, txtXVal, txtYVal, txtZVal, txtSensors, txtGpsLbl, txtGpsVal, txtGpsDisable;
+	private TextView txtReadingValue, txtXVal, txtYVal, txtZVal, txtSensors, txtHomeLongLbl, txtHomeLatLbl, txtHomeLongVal, txtHomeLatVal, txtGpsDisable;
 	private Button btnProfile, btnViewJob, btnAddJob, btnSync, btnGpsEnable;
 
-	private SensorManager mSensorManager;
-	private Sensor mMagnetometer;
-	private SensorListener mSensorListener;
+	private SensorManager sensorManager;
+	private Sensor magnetometer;
 	private List<Sensor> sensorList;
 	private SharedPreferences prefs;
 	
@@ -79,8 +80,10 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		txtYVal = (TextView) findViewById(R.id.txtViewYVal);
 		txtZVal = (TextView) findViewById(R.id.txtViewZVal);
 		txtSensors = (TextView) findViewById(R.id.txtViewSensors);
-		txtGpsLbl = (TextView) findViewById(R.id.txtViewGpsLocLbl);
-		txtGpsVal = (TextView) findViewById(R.id.txtViewGpsVal);
+		txtHomeLatLbl = (TextView) findViewById(R.id.txtViewHomeLatLbl);
+		txtHomeLongLbl = (TextView) findViewById(R.id.txtViewHomeLongLbl);
+		txtHomeLatVal = (TextView) findViewById(R.id.txtViewHomeLatVal);
+		txtHomeLongVal = (TextView) findViewById(R.id.txtViewHomeLongVal);
 		txtGpsDisable = (TextView) findViewById(R.id.txtViewGpsDisable);
 		
 		btnProfile = (Button) findViewById(R.id.btnProfile);
@@ -94,30 +97,21 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		btnViewJob.setOnClickListener(this);
 		btnGpsEnable.setOnClickListener(this);
 
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-		mSensorListener = new SensorListener();
-		mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
-		
-		for (int i = 0; i < 100; i++) {
-			txtReadingValue.setText(String.valueOf(mSensorListener.getMean()));
-			txtXVal.setText(String.valueOf(mSensorListener.getX()));
-			txtYVal.setText(String.valueOf(mSensorListener.getY()));
-			txtZVal.setText(String.valueOf(mSensorListener.getZ()));
-			
-		}
+		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
 
-		LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		SensorLocationListener mlocListener = new SensorLocationListener();
+		LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		SensorLocationListener locListener = new SensorLocationListener();
 		
 
-		if (mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, mlocListener);
-			loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		} else if (mlocManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 1, mlocListener);
-			loc = mlocManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, locListener);
+			loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		} else if (locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+			locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 1, locListener);
+			loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		} else {
 			txtGpsDisable.setVisibility(1);
 			btnGpsEnable.setVisibility(1);
@@ -125,10 +119,11 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 		}
 		
 		if(loc!=null){
-			txtGpsVal.setText(loc.getLatitude()+" : " + loc.getLongitude());
+			txtHomeLongVal.setText(loc.getLongitude()+"");
+			txtHomeLatVal.setText("   "+loc.getLatitude());
 		}
 
-		sensorList = mSensorManager.getSensorList(RESULT_OK);
+		sensorList = sensorManager.getSensorList(RESULT_OK);
 		StringBuffer sensorNames = new StringBuffer();
 
 		for (Sensor sensor : sensorList) {
@@ -143,7 +138,7 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 	 */
 	protected void onResume() {
 		super.onResume();
-		mSensorManager.registerListener(mSensorListener, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
 	/* (non-Javadoc)
@@ -151,8 +146,7 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 	 */
 	protected void onPause() {
 		super.onPause();
-		mSensorManager.unregisterListener(mSensorListener);
-		// mlocManager.removeUpdates(mlocListener);
+		sensorManager.unregisterListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -233,5 +227,26 @@ public class HomeActivity extends Activity implements OnSharedPreferenceChangeLi
 			Toast.makeText(HomeActivity.this, "Client successfully synchronized with the server.", Toast.LENGTH_LONG).show();
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see android.hardware.SensorEventListener#onAccuracyChanged(android.hardware.Sensor, int)
+	 */
+	public void onAccuracyChanged(Sensor paramSensor, int paramInt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see android.hardware.SensorEventListener#onSensorChanged(android.hardware.SensorEvent)
+	 */
+	public void onSensorChanged(SensorEvent event) {
+		
+		txtReadingValue
+				.setText(String.valueOf(Math.sqrt(Math.pow(event.values[0], 2) + Math.pow(event.values[1], 2) + Math.pow(event.values[2], 2))));
+		txtXVal.setText(String.valueOf(event.values[0]));
+		txtYVal.setText(String.valueOf(event.values[1]));
+		txtZVal.setText(String.valueOf(event.values[2]));
+		
 	}
 }
