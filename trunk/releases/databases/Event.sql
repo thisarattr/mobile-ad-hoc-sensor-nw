@@ -1,4 +1,4 @@
-	CREATE EVENT myevent1
+	CREATE EVENT sensor_event
 		ON SCHEDULE EVERY 60 minute ENABLE
 		DO
 		  BEGIN
