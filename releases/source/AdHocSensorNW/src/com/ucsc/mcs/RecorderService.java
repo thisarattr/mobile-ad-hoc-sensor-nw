@@ -108,10 +108,10 @@ public class RecorderService extends Service {
 			Log.d(TAG, "GPS provider and network provider both disabled.");
 			Toast.makeText(this, "Location Services are disables. Enable it to continue.", Toast.LENGTH_LONG).show();
 			//TODO do something to make this enable GPS.
-/*			stopService(new Intent(this, RecorderService.class));
+			stopService(new Intent(this, RecorderService.class));
 			Intent gspSettings = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 			gspSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			getApplication().startActivity(gspSettings);*/
+			getApplication().startActivity(gspSettings);
 		}
 		
 		if (loc != null) {
