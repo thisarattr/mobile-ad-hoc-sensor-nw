@@ -53,7 +53,6 @@ public class SensorServiceSkeleton {
 	private static final double RADIAN = 0.017453293;
 	private static final Logger LOG = Logger.getLogger(SensorServiceSkeleton.class.getCanonicalName());
 	
-	private DataSource ds = null; 
 	
 	/**
 	 * @return
@@ -62,6 +61,8 @@ public class SensorServiceSkeleton {
 	 */
 	private Connection getMySqlConnection() throws NamingException, SQLException {
 
+		DataSource ds = null; 
+		
 		if (ds == null) {
 			Context initCtx;
 			initCtx = new InitialContext();
@@ -70,6 +71,21 @@ public class SensorServiceSkeleton {
 		}
 
 		return ds.getConnection();
+	}
+	
+	/**
+	 * @param conn
+	 */
+	private void closeConn(Connection conn) {
+
+		try {
+			if (conn != null) {
+				//conn.commit();
+				conn.close();
+			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Error occurred while closing database connection. Original Exception: " + e.toString());
+		}
 	}
 
 	/**
@@ -103,6 +119,7 @@ public class SensorServiceSkeleton {
 			prepStmt = conn
 					.prepareStatement("insert into job (datetime, sensor_id, frequency, location, time_period, nodes, user_id, description) values (now(),1,1,'loc',2,2,2,'desc')");
 			prepStmt.execute();
+			closeConn(conn);
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -232,7 +249,7 @@ public class SensorServiceSkeleton {
 				conn.rollback();
 			}
 			responseType.setUploadDataResponseType(isSuccess);
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while upload data. Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -324,7 +341,7 @@ public class SensorServiceSkeleton {
 				jobsResponseType.setGetJobsResponseType(" ");
 				System.out.println("Job not found for the userId : ");
 			}
-			
+			closeConn(conn);
 			
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while select jobs data. Original stacktrace: " + e.toString());
@@ -367,6 +384,7 @@ public class SensorServiceSkeleton {
 				}
 			}
 			responseType.setGetReferenceDataResponseType(sensor.toString());
+			closeConn(conn);
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Error occurred while get reference data. Original stacktrace: " + e.toString());
 		} catch (NamingException e) {
@@ -478,7 +496,7 @@ public class SensorServiceSkeleton {
 				Transport.send(msg);
 				isSuccess=true;
 			}
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+emailDataRequestType.getImei()+" and jobId:"+emailDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -550,6 +568,7 @@ public class SensorServiceSkeleton {
 				prepStmt.execute();
 				isSuccess = true;
 			}
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while Adding new job. Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -589,7 +608,7 @@ public class SensorServiceSkeleton {
 			prepStmt.setString(6, subscribeRequestType.getEmail());
 			prepStmt.execute();
 			isSuccess=true;
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while subscribing nwe user:"+subscribeRequestType.getUsername()+". Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -618,9 +637,10 @@ public class SensorServiceSkeleton {
 		
 		ViewDataResponseType viewDataResponse = new ViewDataResponseType();
 		
-		String sql = "SELECT d.id, d.datetime,d.latitude,d.longitude,d.reading, tmp.username " +
+		String sql = "SELECT d.id, d.datetime,d.latitude,d.longitude,d.reading, d.user_id " +
 				"FROM data d, (SELECT j.id, u.username FROM job j INNER JOIN user u ON j.user_id=u.id WHERE username=? AND j.id=?) tmp " +
 				"WHERE d.job_id=tmp.id";
+		
 		StringBuffer output = new StringBuffer();
 		
 		try {
@@ -636,7 +656,7 @@ public class SensorServiceSkeleton {
 				output.append(resultSet.getDouble("latitude")+DATA_DELEMETER);
 				output.append(resultSet.getDouble("longitude")+DATA_DELEMETER);
 				output.append(resultSet.getDouble("reading")+DATA_DELEMETER);
-				output.append(resultSet.getString("username"));
+				output.append(resultSet.getLong("user_id"));
 				if(!resultSet.isLast()){
 					output.append(ROW_DELEMETER);
 				}
@@ -646,7 +666,7 @@ public class SensorServiceSkeleton {
 				//Query returned null no error occurred.
 				output.append("No records found on the requested job. Job need to be added by the same user to retrieve them.");
 			}
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while retrieving data for user:"+viewDataRequestType.getUsername()+" and jobId:"+viewDataRequestType.getJobId()+". Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -710,6 +730,7 @@ public class SensorServiceSkeleton {
 			if (output.toString().isEmpty()) {
 				output.append("No Jobs added by you.");
 			}
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while retrieving Job data for user:" + viewJobRequestType.getUsername() + ". Original stacktrace: "
 					+ e.toString());
@@ -796,7 +817,7 @@ public class SensorServiceSkeleton {
 					}
 				}
 			}
-
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while password Reset operation. Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -932,7 +953,7 @@ public class SensorServiceSkeleton {
 			if (updateCount == 1) {
 				isSuccess = true;
 			}
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			error = "Error occurred while Updating new job. Original stacktrace: " + e.toString();
 			LOG.log(Level.SEVERE, error);
@@ -988,7 +1009,7 @@ public class SensorServiceSkeleton {
 			if (updateCount == 1) {
 				isSuccess = true;
 			}
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			LOG.log(Level.SEVERE, "Error occurred while Updating new job. Original stacktrace: " + e.toString());
 		} catch (SQLException e) {
@@ -1039,7 +1060,7 @@ public class SensorServiceSkeleton {
 			}
 			userResponseType.setGetUserResponseType(userInfo.toString());
 			isSuccess = true;
-			
+			closeConn(conn);
 		} catch (NamingException e) {
 			error = "Error occurred while retrieving user details. Original stacktrace: " + e.toString();
 			LOG.log(Level.SEVERE, error);
